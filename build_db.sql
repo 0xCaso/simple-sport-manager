@@ -19,6 +19,16 @@ CREATE TABLE Tesserato (
 	PRIMARY KEY(cf)
 );
 
+CREATE TABLE iscrizione (
+	codass					varchar(20),
+	id_tesserato 			char(16),
+	data_iscrizione			date,
+	scadenza_iscrizione		date,
+	PRIMARY KEY (codass, id_tesserato),
+	FOREIGN KEY (codass) REFERENCES Associazione(codice),
+	FOREIGN KEY (id_tesserato) REFERENCES Tesserato(cf)
+);
+
 CREATE TABLE Citta (
 	cap				char(5),
 	nome			varchar(100),
@@ -44,6 +54,15 @@ CREATE TABLE Fornitore (
 	email				varchar(80),
 	telefono			varchar(12),
 	PRIMARY KEY (piva)
+);
+
+CREATE TABLE contratti (
+	codass				varchar(20),
+	cod_fornitore	char(11),
+	data_inizio			date,
+	PRIMARY KEY (codass, cod_fornitore),
+	FOREIGN KEY (codass) REFERENCES Associazione(codice),
+	FOREIGN KEY (cod_fornitore) REFERENCES Fornitore(piva)
 );
 
 CREATE TABLE Campo (
@@ -92,9 +111,9 @@ CREATE TABLE Pagamento (
 	id_soggetto		varchar(16),
 	tipo_operazione int,
 	PRIMARY KEY (codass, data, id_dipendente),
-	FOREIGN KEY (codass) REFERENCES Dipendente(codass),
-	FOREIGN KEY (id_dipendente) REFERENCES Dipendente(cf),
-	FOREIGN KEY (tipo_operazione) REFERENCES tipo_operazione(codice)
+	FOREIGN KEY (codass) 			REFERENCES Dipendente(codass),
+	FOREIGN KEY (id_dipendente) 	REFERENCES Dipendente(cf),
+	FOREIGN KEY (tipo_operazione) 	REFERENCES tipo_operazione(codice)
 );
 
 CREATE TABLE tipo_operazione (
