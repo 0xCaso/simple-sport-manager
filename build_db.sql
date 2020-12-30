@@ -231,12 +231,14 @@ VALUES
 ('POLRM', '06500120016', '5/08/2015'),
 ('POLRM', '04512794513', '13/06/2015');
 
+/* Specifiche sulla gerarchia dei dipendenti */
 INSERT INTO grado_dipendenti
 VALUES
 (10, 'Segreteria'),
 (20, 'Responsabile'),
 (30, 'Amministrazione');
 
+/* Popolamento dipendenti */ 
 INSERT INTO dipendente (codass, cognome, nome, sesso, data_nascita, cf, telefono, email, password, grado, data_assunzione, data_fine, cod_sede)
 VALUES
 ('JSDB', 'Bertugli','Giovanna','F','1998-09-05','BRTGNN98P45C524P','0376/270098','giovanna.bertugli@gmail.com','BQ88vibxC77P', 10, '2012-12-15', NULL, 1),
@@ -269,8 +271,66 @@ VALUES
 ('CAME', 'Laviano','Alba','F','1986-07-18','LVNLBA86L58F216F','0372/350332','alba.laviano@gmail.com','GT63rocrF92R', 30, '2019-8-18', NULL, 2),
 ('POLRM', 'Poli','Tolomeo','M','1995-09-23','PLOTLM95P23F717I','011/651116','tolomeo.poli@gmail.com','ZQ93svkiD41L', 10, '2018-9-19', NULL, 1);
 
+INSERT INTO tipologia_campo (codass, id, sport, terreno, larghezza, lunghezza)
+VALUES
+('JSDB', 1, 'Basket', 'parquet', 15, 28),
+('JSDB', 2, 'Basket', 'parquet', 14, 27),
+('CAME', 1, 'Calcio', 'erba', 90, 120),
+('CAME', 2, 'Calcio', 'erba', 65, 105),
+('CAME', 3, 'Calcio', 'erba', 60, 100),
+('POLRM', 1, 'Calcio', 'erba', 65, 105),
+('POLRM', 2, 'Calcio 5', 'gomma', 15, 25),
+('POLRM', 3, 'Calcio 5', 'erba sintetica', 22, 42),
+('POLRM', 4, 'Calcio 7', 'erba sintetica', 30, 50),
+('POLRM', 5, 'Calcio 8', 'erba', 40, 60),
+('POLRM', 6, 'Basket', 'parquet', 15, 28),
+('POLRM', 7, 'Basket 3', 'gomma', 15, 11);
 
+/*
+	Calcio:
+		- 65 x 105 (misure minime)
+		- 60 x 100 (casi eccezionali)
+	Calcio 5:
+		- 15 x 25
+		- 22 x 42
+	Calcio 7:
+		- 44-65 delta lunghezza
+		- 25-40 delta larghezza
+	Calcio 8:
+		- 35-45 delta larghezza
+		- 55-70 delta lunghezza
+		
+	Basket 5vs5:
+		- 15 x 28
+	Basket 3vs3:
+		- 15 x 11
+		
+	Tennis:
+		-  8,23 x 23,77 (SINGOLO)
+		- 10,97 x 23,77 (DOPPIO)
+		
+		- superfici:
+			terra battuta, terra verde, erba, erba sintetica, cemento, sintetico
+			
+	Pallavolo:
+		- 9 x 18
+		
+		- terreno:
+			parquet, pvc, gomma, sabbia, cemento
+*/
 
+INSERT INTO campo (codass, id, cod_sede, tipologia, attrezzatura)
+VALUES
+('JSDB', 1, 1, 1, true),
+('JSDB', 2, 1, 2, true),
+('JSDB', 1, 2, 1, true),
+('CAME', 1, 1, 2, true),
+('CAME', 2, 1, 2, true),
+('CAME', 1, 2, 3, true),
+('POLRM', 1, 1, 1, true),
+('POLRM', 2, 1, 2, true),
+('POLRM', 3, 1, 3, true),
+('POLRM', 4, 1, 4, true);
 
 
 
