@@ -30,22 +30,24 @@ CREATE TABLE iscrizione (
 );
 
 CREATE TABLE Citta (
+	istat			char(6),
 	cap				char(5),
 	nome			varchar(100) NOT NULL,
 	provincia		char(2) NOT NULL,
-	PRIMARY KEY (cap)
+	regione			char(3) NOT NULL,
+	PRIMARY KEY (istat)
 );
 
 CREATE TABLE Sede (
 	codass			varchar(20),
 	codice			int,
 	via				varchar(150) NOT NULL,
-	cap				char(5) NOT NULL,
+	cod_citta		char(6) NOT NULL,
 	nome			varchar(150) NOT NULL,
 	telefono		varchar(12),
 	PRIMARY KEY (codass, codice),
-	FOREIGN KEY (codass) 	REFERENCES Associazione(codice),
-	FOREIGN KEY (cap)		REFERENCES Citta(cap)
+	FOREIGN KEY (codass) 		REFERENCES Associazione(codice),
+	FOREIGN KEY (cod_citta)		REFERENCES Citta(istat)
 );
 
 CREATE TABLE Fornitore (
