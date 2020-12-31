@@ -148,32 +148,62 @@ CREATE TABLE Pagamento (
 	FOREIGN KEY (codass, id_dipendente) 	REFERENCES Dipendente(codass, cf),
 	FOREIGN KEY (tipo_operazione) 			REFERENCES tipo_operazione(codice)
 );
-*/
 
 CREATE TABLE tipo_operazione (
 	codice			int,
 	descrizione		varchar(255) NOT NULL,
 	PRIMARY KEY (codice)
 );
+*/
 
 CREATE TABLE Pagamento (
-	codass				varchar(20) NOT NULL,
+	codass				varchar(20),
 	data				timestamp,
 	id_dipendente		char(16),
 	importo				money NOT NULL,
-	tipo_operazione		int NOT NULL,
+	tipo_operazione		char(1) NOT NULL,
 	PRIMARY KEY (codass, data, id_dipendente), /* codass in chiave sempre per via del licenziamento e coerenza con la PKey del dipendente */
-	FOREIGN KEY (codass, id_dipendente) REFERENCES Dipendente(codass, cf),
-	FOREIGN KEY (tipo_operazione) 		REFERENCES tipo_operazione(codice)
+	FOREIGN KEY (codass, id_dipendente) REFERENCES Dipendente(codass, cf)
+);
+/*
+	tipo_operazione:
+		F => Fattura
+		S => Stipendio
+		E => Esborso
+*/
+
+CREATE TABLE stipendi (
+	codass				varchar(20),
+	data				timestamp,
+	id_dipendente		char(16),
+	soggetto			char(16),		
+	PRIMARY KEY (codass, data, id_dipendente, soggetto),
+	FOREIGN KEY (codass, data, id_dipendente) REFERENCES Pagamento(codass, data, id_dipendente),
+	FOREIGN KEY (codass, soggetto) REFERENCES Dipendente(codass, cf)
 );
 
-/*
-	1 - compenso arbitri
-	2 - pagamento fornitore
-	3 - pagamento stipendio
-	4 - entrata affitto campo
-	5 - acquisto gadget
-*/
+CREATE TABLE fatture (
+	codass				varchar(20),
+	data				timestamp,
+	id_dipendente		char(16),
+	tesserato			char(16) NOT NULL, /* Arbitro o Atleta */
+	descrizione			varchar(255),
+	progressivo			int,
+	PRIMARY KEY (codass, data, id_dipendente, progressivo),
+	FOREIGN KEY (codass, data, id_dipendente) REFERENCES Pagamento(codass, data, id_dipendente),
+	FOREIGN KEY (codass, tesserato) REFERENCES Tesserato(codass, cf)
+);
+
+CREATE TABLE esborsi (
+	codass				varchar(20),
+	data				timestamp,
+	id_dipendente		char(16),
+	id_fornitore		char(16) NOT NULL,
+	descrizione			varchar(255),
+	PRIMARY KEY (codass, data, id_dipendente, id_fornitore),
+	FOREIGN KEY (codass, data, id_dipendente) REFERENCES Pagamento(codass, data, id_dipendente),
+	FOREIGN KEY (id_fornitore) REFERENCES Fornitore(piva)
+);
 
 /* Popolamento associazioni */
 INSERT INTO associazione (codice, ragsoc, sito,	email, password)
@@ -346,6 +376,24 @@ VALUES
 ('POLRM', 3, 1, 3, true),
 ('POLRM', 4, 1, 4, true);
 
+INSERT INTO pagamento (codass, data, id_dipendente, importo, tipo_operazione)
+VALUES
+('JSDB', '12/04/2021', 'BBBLRD94E18F315Z', '-3000,65', 'S');
+
+INSERT INTO stipendi (codass, data, id_dipendente, soggetto)
+VALUES
+('JSDB', '12/04/2021', 'BBBLRD94E18F315Z', 'BRTGNN98P45C524P');
+
+/* Query per la visualizzazione degli stipendi */
+select P.codass, P.importo, D1.nome as Nome_Emissivo, D1.cognome as Cognome_Emissivo, D2.nome as Nome_Ricevente, D2.cognome as Cognome_Ricevente, P.data
+from Pagamento as P
+join dipendente D1 on 
+	D1.codass = P.codass AND D1.cf = P.id_dipendente
+join stipendi S on
+	S.codass = P.codass AND S.data = P.data AND S.id_dipendente = P.id_dipendente
+join dipendente D2 on
+	S.soggetto = D2.cf AND S.codass = D2.codass
+where tipo_operazione = 'S';
 
 
 
