@@ -83,7 +83,8 @@ CREATE TABLE Campo (
 	tipologia		int NOT NULL,
 	attrezzatura	bool DEFAULT false,
 	PRIMARY KEY (codass, id, cod_sede),
-	FOREIGN KEY (codass, cod_sede)	REFERENCES Sede(codass, codice)
+	FOREIGN KEY (codass, cod_sede)	REFERENCES Sede(codass, codice),
+	FOREIGN KEY (tipologia)			REFERENCES tipologia_campo(id)
 );
 
 CREATE TABLE prenotazioni (
@@ -122,7 +123,7 @@ CREATE TABLE Dipendente (
 	data_assunzione 	date NOT NULL,
 	data_fine			date, /* if IS NOT NULL => licenziato/pensione */
 	cod_sede			int,
-	PRIMARY KEY (codass, cf),
+	PRIMARY KEY (codass, cf), /* codass in chiave altrimenti un dipendente non potrebbe cambiare associazione (es. licenziamento) */
 	FOREIGN KEY (codass)			REFERENCES Associazione(codice),
 	FOREIGN KEY (codass, cod_sede)	REFERENCES Sede(codass, codice),
 	FOREIGN KEY (grado)				REFERENCES grado_dipendenti(id)
@@ -134,6 +135,7 @@ CREATE TABLE grado_dipendenti (
 	PRIMARY KEY (id)
 )
 
+/*
 CREATE TABLE Pagamento (
 	codass			varchar(20),	
 	importo			money NOT NULL, /* (> 0) => entrata (< 0) => uscita */
@@ -146,11 +148,23 @@ CREATE TABLE Pagamento (
 	FOREIGN KEY (codass, id_dipendente) 	REFERENCES Dipendente(codass, cf),
 	FOREIGN KEY (tipo_operazione) 			REFERENCES tipo_operazione(codice)
 );
+*/
 
 CREATE TABLE tipo_operazione (
 	codice			int,
 	descrizione		varchar(255) NOT NULL,
 	PRIMARY KEY (codice)
+);
+
+CREATE TABLE Pagamento (
+	codass				varchar(20) NOT NULL,
+	data				timestamp,
+	id_dipendente		char(16),
+	importo				money NOT NULL,
+	tipo_operazione		int NOT NULL,
+	PRIMARY KEY (codass, data, id_dipendente), /* codass in chiave sempre per via del licenziamento e coerenza con la PKey del dipendente */
+	FOREIGN KEY (codass, id_dipendente) REFERENCES Dipendente(codass, cf),
+	FOREIGN KEY (tipo_operazione) 		REFERENCES tipo_operazione(codice)
 );
 
 /*
