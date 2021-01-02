@@ -212,6 +212,10 @@ VALUES
 ('JSDB', 'Jesolo San Donà Basket', 'jesolosandonabasket.it', 'info@jsdb.it', 'basket01'),
 ('CAME', 'Calciatori Mestrini', 'calciomestre.it', 'info@calciomestre.it', 'calcio01');
 
+INSERT INTO associazione (codice, ragsoc, sito,	email, password)
+VALUES
+('TCPG', 'Tennis Club Portogruaro', 'portogruarotc.it', 'info@pgtc.it', 'tennis01');
+
 /* Popolamento Tesserati */
 INSERT INTO tesserato(
 codass, cognome, nome, sesso, data_nascita, cf, telefono, email, password, arbitro, data_iscrizione, scadenza_iscrizione)
@@ -247,6 +251,37 @@ VALUES
 ('CAME','Lange','Emanuele','M','1980-07-13','LNGMNL80L13C387K','0524/865784','emanuele.lange@yahoo.com','GA28euvzV87I', false, '03/03/2021', '03/03/2023'),
 ('POLRM', 'Raimondo', 'Pantelli', 'M','1984-04-30','PNTRND84D30H108A','0824/1009494','raimondo.pantelli@yahoo.com','JN83lxzdV76Z', false, '12/06/2018', '12/06/2020');
 
+insert into tesserato (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,arbitro,data_iscrizione,scadenza_iscrizione)
+values ('TCPG','Sabbatelli','Mirko','M','2000-11-19','SBBMRK17S19F961M','035/539737','mirko.sabbatelli@virgilio.it','UA90vjatO35R',false,' 31/12/2020',' 11/05/2022');
+
+insert into tesserato (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,arbitro,data_iscrizione,scadenza_iscrizione)
+values ('TCPG','Mazzolini','Ulrico','M','1995-01-26','MZZLRC35A26A038K','0372/213476','ulrico.mazzolini@hotmail.com','GK40okdlP09V',true,' 22/10/2019',' 08/07/2022');
+
+insert into tesserato (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,arbitro,data_iscrizione,scadenza_iscrizione)
+values ('TCPG','Vargiu','Daniele','M','1990-08-19','VRGDNL10M19E727A','02/1067185','daniele.vargiu@tele2.it','ZE21ovjuU79O',false,' 29/06/2020',' 08/07/2022');
+
+insert into tesserato (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,arbitro,data_iscrizione,scadenza_iscrizione)
+values ('TCPG','Maragnano','Decimo','M','1982-02-01','MRGDCM12B01H242P','02/793234','deci.mara@yahoo.it','BL18lbfiE35Q',true,' 23/09/2019',' 11/05/2022');
+
+insert into tesserato (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,arbitro,data_iscrizione,scadenza_iscrizione)
+values ('TCPG','Cavioni','Marinella','F','1981-08-23','CVNMNL81M63L817G','035/258064','marinella.cavioni@tele2.it','WQ64hhbeQ06E',false,' 14/08/2020',' 29/08/2023');
+
+insert into tesserato (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,arbitro,data_iscrizione,scadenza_iscrizione)
+values ('TCPG','Guglielmetti','Mosè','M','1996-06-24','GGLMSO96H24A444K','089/948950','mos.guglielmetti@teletu.it','PN40iozpL49Z',false,' 31/12/2020',' 07/12/2022');
+
+insert into tesserato (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,arbitro,data_iscrizione,scadenza_iscrizione)
+values ('TCPG','Fioravanzi','Loris','M','1981-10-12','FRVLRS81R12I482L','0372/1039860','lori.fior@tiscali.it','BN74tlzaR29W',false,' 15/12/2020',' 21/02/2022');
+
+insert into tesserato (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,arbitro,data_iscrizione,scadenza_iscrizione)
+values ('TCPG','Iaconelli','Tamara','F','1971-04-11','CNLTMR61D51L238M','055/753391','tama.iaco@hotmail.com','ZO24zppuM66V',true,'01/01/2019','14/01/2022');
+
+insert into tesserato (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,arbitro,data_iscrizione,scadenza_iscrizione)
+values ('TCPG','Gattinara','Orsola','F','1992-10-03','GTTRSL02R43H939G','085/861691','orsola.gattinara@gmail.com','LJ35bocpF51T',false,' 28/10/2019',' 23/11/2023');
+
+insert into tesserato (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,arbitro,data_iscrizione,scadenza_iscrizione)
+values ('TCPG','Altinier','Pia','F','1996-08-22','LTNPIA36M62H414P','080/644749','pia.altinier@tiscali.it','HU72tpcdE75N',true,' 17/09/2019',' 06/07/2022');
+
+
 /* Popolamento Sedi */
 INSERT INTO sede (codass, codice, via, cod_civico, cod_citta, nome, telefono)
 VALUES
@@ -256,6 +291,11 @@ VALUES
 ('JSDB', 2, 'Via Tredici Martiri', 15, '27027', 'Jesolo San Donà Basket (Noventa)', '0421/5564472'),
 ('POLRM', 1, 'Viale Tevere', 96, '58104', 'Polisportiva Roma (Tivoli)', '0564/803071');
 
+INSERT INTO sede (codass, codice, via, cod_civico, cod_citta, nome, telefono)
+VALUES
+('TCPG', 1, 'Via Alberti', 72, '27029', 'Tennis Club Portogruaro', '0564/803071'),
+('TCPG', 2, 'Via Verdi', 43, '27029', 'Tennis Club Portogruaro (Portovecchio)', '0564/378254');
+
 /* Popolamento fornitori */
 INSERT INTO fornitore (piva, ragione_soc, email, telefono)
 VALUES
@@ -263,6 +303,11 @@ VALUES
 ('05126523875', 'Wilson Italia', 'info@wilson.com', '3345879854'),
 ('07762523875', 'Adidas', 'd.prod@adidas.com', '3645479884'),
 ('04512794513', 'Nike', 'd.prod@nike.com', '0645446914');
+
+INSERT INTO fornitore (piva, ragione_soc, email, telefono)
+VALUES
+('06456486415', 'Babolat Italia', 'support@babolat.it', '3347541878'),
+('08794512358', 'ATP', 'info@atp.com', '3985623145'),
 
 /* Registrazioni contratti */
 INSERT INTO contratti (codass, cod_fornitore, data_inizio)
@@ -274,6 +319,12 @@ VALUES
 ('POLRM', '05126523875', '25/10/2015'),
 ('POLRM', '06500120016', '5/08/2015'),
 ('POLRM', '04512794513', '13/06/2015');
+
+INSERT INTO contratti (codass, cod_fornitore, data_inizio)
+VALUES
+('TCPG', '05126523875', '13/06/2020'),
+('TCPG', '06456486415', '3/02/2017'),
+('TCPG', '08794512358', '22/09/2016');
 
 /* Specifiche sulla gerarchia dei dipendenti */
 INSERT INTO grado_dipendenti
@@ -315,6 +366,36 @@ VALUES
 ('CAME', 'Laviano','Alba','F','1986-07-18','LVNLBA86L58F216F','0372/350332','alba.laviano@gmail.com','GT63rocrF92R', 30, '2019-8-18', NULL, 2),
 ('POLRM', 'Poli','Tolomeo','M','1995-09-23','PLOTLM95P23F717I','011/651116','tolomeo.poli@gmail.com','ZQ93svkiD41L', 10, '2018-9-19', NULL, 1);
 
+insert into dipendente (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,grado,data_assunzione,data_fine,codsede)
+values ('TCPG','Carobbio','Baldassarre','M','1985-08-15','CRBBDS85M15E507I','0736/659335','bald.caro@hotmail.com','UL62fzqlR36O',10,' 28/12/2015',' 12/10/2022',1);
+
+insert into dipendente (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,grado,data_assunzione,data_fine,codsede)
+values ('TCPG','Fugazzi','Arnaldo','M','2000-10-30','FGZRLD00R30H395L','0543/193304','arnaldo.fugazzi@gmail.com','UD65smjwZ09G',20,' 02/08/2012',' 23/08/2017',2);
+
+insert into dipendente (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,grado,data_assunzione,data_fine,codsede)
+values ('TCPG','Onofrio','Adriana','F','1989-10-19','NFRDRN89R59L535D','049/721393','adriana.onofrio@gmail.com','JX23zfdtI23O',30,' 24/11/2016',' 18/07/2019',1);
+
+insert into dipendente (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,grado,data_assunzione,data_fine,codsede)
+values ('TCPG','Petrazzuolo','Dante','M','1994-07-06','PTRDNT94L06G428W','0382/1051382','d.petrazzuolo@gmail.com','AI29ycsnN64G',10,' 28/12/2015',' 14/11/2017',2);
+
+insert into dipendente (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,grado,data_assunzione,data_fine,codsede)
+values ('TCPG','Amedei','Minerva','F','1991-02-26','MDAMRV91B66C187D','0984/286769','minerva.amedei@libero.it','WU47thmgX16C',20,' 29/06/2015',' 22/09/2017',1);
+
+insert into dipendente (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,grado,data_assunzione,data_fine,codsede)
+values ('TCPG','Quintarelli','Gerardo','M','1998-03-08','QNTGRD98C08F655L','049/971795','g.quintarelli@tele2.it','UK26cmfsN62K',30,' 29/06/2015',' 22/09/2017',2);
+
+insert into dipendente (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,grado,data_assunzione,data_fine,codsede)
+values ('TCPG','Minozzi','Omero','M','1997-11-22','MNZMRO97S22M119N','0523/214353','omero.minozzi@tiscali.it','EL04hebjP68A',10,' 21/03/2014',' 22/09/2017',1);
+
+insert into dipendente (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,grado,data_assunzione,data_fine,codsede)
+values ('TCPG','Meloncelli','Margherita','F','1983-08-26','MLNMGH83M66B204D','011/558535','margherita.meloncelli@yahoo.com',20,'QO60mdehP30Z',' 07/05/2014',' 24/08/2022',2);
+
+insert into dipendente (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,grado,data_assunzione,data_fine,codsede)
+values ('TCPG','Arbizzani','Ferdinando','M','2001-07-23','RBZFDN01L23F918O','035/812848','ferdinando.arbizzani@lycos.it',30,'UY60kdlrQ49Q',' 07/10/2015',' 28/01/2021',1);
+
+insert into dipendente (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,grado,data_assunzione,data_fine,codsede)
+values ('TCPG','Tagliafierro','Romolo','M','1991-05-23','TGLRML91E23D578W','035/125471','romolo.tagliafierro@gmail.com',10,'HE87dnjnA83N',' 07/02/2013',' 22/09/2017',2);
+
 INSERT INTO tipologia_campo (codass, id, sport, terreno, larghezza, lunghezza)
 VALUES
 ('JSDB', 1, 'Basket', 'parquet', 15, 28),
@@ -329,6 +410,13 @@ VALUES
 ('POLRM', 5, 'Calcio 8', 'erba', 40, 60),
 ('POLRM', 6, 'Basket', 'parquet', 15, 28),
 ('POLRM', 7, 'Basket 3', 'gomma', 15, 11);
+
+INSERT INTO tipologia_campo (codass, id, sport, terreno, larghezza, lunghezza)
+VALUES
+('TCPG', 1, 'Tennis', 'terra battuta', 11, 24),
+('TCPG', 2, 'Tennis', 'erba', 11, 24),
+('TCPG', 3, 'Tennis', 'erba sintatica', 11, 24),
+('TCPG', 4, 'Tennis', 'cemento', 11, 24);
 
 /*
 	Calcio:
@@ -376,13 +464,46 @@ VALUES
 ('POLRM', 3, 1, 3, true),
 ('POLRM', 4, 1, 4, true);
 
+INSERT INTO campo (codass, id, cod_sede, tipologia, attrezzatura)
+VALUES
+('TCPG', 1, 1, 1, true),
+('TCPG', 2, 1, 2, true),
+('TCPG', 3, 1, 3, true),
+('TCPG', 4, 1, 4, true),
+('TCPG', 1, 2, 1, true),
+('TCPG', 2, 2, 3, true);
+
+/*
+
+ATTANSION (vincolo di integrità da aggiungere):
+Su stipendi/fatture/esborsi --> id dipendente deve essere di un dipendente del grado giusto
+								(esempio --> fatture gestite esclusivamente da dipendenti con grado associato a "segreteria")
+							--> inoltre la chiave codass-data-id_dipendente deve corrispondere a una tupla su "pagamento"
+								la quale dovrà avere il giusto tipo di operazione
+								
+*/
+
 INSERT INTO pagamento (codass, data, id_dipendente, importo, tipo_operazione)
 VALUES
 ('JSDB', '12/04/2021', 'BBBLRD94E18F315Z', '-3000,65', 'S');
 
+INSERT INTO pagamento (codass, data, id_dipendente, importo, tipo_operazione)
+VALUES
+('TCPG', '22/02/2021', 'NFRDRN89R59L535D', '-2500,65', 'S'),
+('TCPG', '18/08/2020', 'NFRDRN89R59L535D', '-2750,80', 'S'),
+('TCPG', '29/05/2019', 'QNTGRD98C08F655L', '-2880,05', 'S'),
+('TCPG', '04/01/2020', 'QNTGRD98C08F655L', '-3220,20', 'S');
+
 INSERT INTO stipendi (codass, data, id_dipendente, soggetto)
 VALUES
 ('JSDB', '12/04/2021', 'BBBLRD94E18F315Z', 'BRTGNN98P45C524P');
+
+INSERT INTO stipendi (codass, data, id_dipendente, soggetto)
+VALUES
+('TCPG', '22/02/2021', 'NFRDRN89R59L535D', 'QNTGRD98C08F655L'),
+('TCPG', '18/08/2020', 'NFRDRN89R59L535D', 'MDAMRV91B66C187D'),
+('TCPG', '29/05/2019', 'QNTGRD98C08F655L', 'TGLRML91E23D578W'),
+('TCPG', '04/01/2020', 'QNTGRD98C08F655L', 'PTRDNT94L06G428W');
 
 /* Query per la visualizzazione degli stipendi */
 select P.codass, P.importo, D1.nome as Nome_Emissivo, D1.cognome as Cognome_Emissivo, D2.nome as Nome_Ricevente, D2.cognome as Cognome_Ricevente, P.data
