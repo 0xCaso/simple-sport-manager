@@ -92,11 +92,15 @@ CREATE TABLE prenotazioni (
 	id_campo		int,
 	sede			int,
 	id_tesserato	char(16) NOT NULL,
-	data			timestamp,
+	data			timestamp NOT NULL,
+	ore				float NOT NULL,
 	arbitro			bool DEFAULT false,
 	PRIMARY KEY (codass, id_campo, sede, data),
 	FOREIGN KEY (codass, id_campo, sede) REFERENCES Campo(codass, id, cod_sede)
 );
+
+ALTER TABLE prenotazioni
+ADD column ore float NOT NULL
 
 CREATE TABLE tipologia_campo (
 	codass			varchar(20),
@@ -307,7 +311,7 @@ VALUES
 INSERT INTO fornitore (piva, ragione_soc, email, telefono)
 VALUES
 ('06456486415', 'Babolat Italia', 'support@babolat.it', '3347541878'),
-('08794512358', 'ATP', 'info@atp.com', '3985623145'),
+('08794512358', 'ATP', 'info@atp.com', '3985623145');
 
 /* Registrazioni contratti */
 INSERT INTO contratti (codass, cod_fornitore, data_inizio)
@@ -366,35 +370,35 @@ VALUES
 ('CAME', 'Laviano','Alba','F','1986-07-18','LVNLBA86L58F216F','0372/350332','alba.laviano@gmail.com','GT63rocrF92R', 30, '2019-8-18', NULL, 2),
 ('POLRM', 'Poli','Tolomeo','M','1995-09-23','PLOTLM95P23F717I','011/651116','tolomeo.poli@gmail.com','ZQ93svkiD41L', 10, '2018-9-19', NULL, 1);
 
-insert into dipendente (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,grado,data_assunzione,data_fine,codsede)
+insert into dipendente (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,grado,data_assunzione,data_fine,cod_sede)
 values ('TCPG','Carobbio','Baldassarre','M','1985-08-15','CRBBDS85M15E507I','0736/659335','bald.caro@hotmail.com','UL62fzqlR36O',10,' 28/12/2015',' 12/10/2022',1);
 
-insert into dipendente (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,grado,data_assunzione,data_fine,codsede)
+insert into dipendente (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,grado,data_assunzione,data_fine,cod_sede)
 values ('TCPG','Fugazzi','Arnaldo','M','2000-10-30','FGZRLD00R30H395L','0543/193304','arnaldo.fugazzi@gmail.com','UD65smjwZ09G',20,' 02/08/2012',' 23/08/2017',2);
 
-insert into dipendente (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,grado,data_assunzione,data_fine,codsede)
+insert into dipendente (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,grado,data_assunzione,data_fine,cod_sede)
 values ('TCPG','Onofrio','Adriana','F','1989-10-19','NFRDRN89R59L535D','049/721393','adriana.onofrio@gmail.com','JX23zfdtI23O',30,' 24/11/2016',' 18/07/2019',1);
 
-insert into dipendente (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,grado,data_assunzione,data_fine,codsede)
+insert into dipendente (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,grado,data_assunzione,data_fine,cod_sede)
 values ('TCPG','Petrazzuolo','Dante','M','1994-07-06','PTRDNT94L06G428W','0382/1051382','d.petrazzuolo@gmail.com','AI29ycsnN64G',10,' 28/12/2015',' 14/11/2017',2);
 
-insert into dipendente (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,grado,data_assunzione,data_fine,codsede)
+insert into dipendente (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,grado,data_assunzione,data_fine,cod_sede)
 values ('TCPG','Amedei','Minerva','F','1991-02-26','MDAMRV91B66C187D','0984/286769','minerva.amedei@libero.it','WU47thmgX16C',20,' 29/06/2015',' 22/09/2017',1);
 
-insert into dipendente (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,grado,data_assunzione,data_fine,codsede)
+insert into dipendente (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,grado,data_assunzione,data_fine,cod_sede)
 values ('TCPG','Quintarelli','Gerardo','M','1998-03-08','QNTGRD98C08F655L','049/971795','g.quintarelli@tele2.it','UK26cmfsN62K',30,' 29/06/2015',' 22/09/2017',2);
 
-insert into dipendente (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,grado,data_assunzione,data_fine,codsede)
+insert into dipendente (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,grado,data_assunzione,data_fine,cod_sede)
 values ('TCPG','Minozzi','Omero','M','1997-11-22','MNZMRO97S22M119N','0523/214353','omero.minozzi@tiscali.it','EL04hebjP68A',10,' 21/03/2014',' 22/09/2017',1);
 
-insert into dipendente (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,grado,data_assunzione,data_fine,codsede)
-values ('TCPG','Meloncelli','Margherita','F','1983-08-26','MLNMGH83M66B204D','011/558535','margherita.meloncelli@yahoo.com',20,'QO60mdehP30Z',' 07/05/2014',' 24/08/2022',2);
+insert into dipendente (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,grado,data_assunzione,data_fine,cod_sede)
+values ('TCPG','Meloncelli','Margherita','F','1983-08-26','MLNMGH83M66B204D','011/558535','margherita.meloncelli@yahoo.com','QO60mdehP30Z',20,' 07/05/2014',' 24/08/2022',2);
 
-insert into dipendente (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,grado,data_assunzione,data_fine,codsede)
-values ('TCPG','Arbizzani','Ferdinando','M','2001-07-23','RBZFDN01L23F918O','035/812848','ferdinando.arbizzani@lycos.it',30,'UY60kdlrQ49Q',' 07/10/2015',' 28/01/2021',1);
+insert into dipendente (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,grado,data_assunzione,data_fine,cod_sede)
+values ('TCPG','Arbizzani','Ferdinando','M','2001-07-23','RBZFDN01L23F918O','035/812848','ferdinando.arbizzani@lycos.it','UY60kdlrQ49Q',30,' 07/10/2015',' 28/01/2021',1);
 
-insert into dipendente (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,grado,data_assunzione,data_fine,codsede)
-values ('TCPG','Tagliafierro','Romolo','M','1991-05-23','TGLRML91E23D578W','035/125471','romolo.tagliafierro@gmail.com',10,'HE87dnjnA83N',' 07/02/2013',' 22/09/2017',2);
+insert into dipendente (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,grado,data_assunzione,data_fine,cod_sede)
+values ('TCPG','Tagliafierro','Romolo','M','1991-05-23','TGLRML91E23D578W','035/125471','romolo.tagliafierro@gmail.com','HE87dnjnA83N',10,' 07/02/2013',' 22/09/2017',2);
 
 INSERT INTO tipologia_campo (codass, id, sport, terreno, larghezza, lunghezza)
 VALUES
@@ -415,7 +419,7 @@ INSERT INTO tipologia_campo (codass, id, sport, terreno, larghezza, lunghezza)
 VALUES
 ('TCPG', 1, 'Tennis', 'terra battuta', 11, 24),
 ('TCPG', 2, 'Tennis', 'erba', 11, 24),
-('TCPG', 3, 'Tennis', 'erba sintatica', 11, 24),
+('TCPG', 3, 'Tennis', 'erba sintetica', 11, 24),
 ('TCPG', 4, 'Tennis', 'cemento', 11, 24);
 
 /*
@@ -462,7 +466,11 @@ VALUES
 ('POLRM', 1, 1, 1, true),
 ('POLRM', 2, 1, 2, true),
 ('POLRM', 3, 1, 3, true),
-('POLRM', 4, 1, 4, true);
+('POLRM', 4, 1, 4, true),
+('POLRM', 5, 1, 5, true),
+('POLRM', 6, 1, 6, true),
+('POLRM', 7, 1, 5, true),
+('POLRM', 8, 1, 6, true),;
 
 INSERT INTO campo (codass, id, cod_sede, tipologia, attrezzatura)
 VALUES
@@ -505,16 +513,111 @@ VALUES
 ('TCPG', '29/05/2019', 'QNTGRD98C08F655L', 'TGLRML91E23D578W'),
 ('TCPG', '04/01/2020', 'QNTGRD98C08F655L', 'PTRDNT94L06G428W');
 
-/* Query per la visualizzazione degli stipendi */
-select P.codass, P.importo, D1.nome as Nome_Emissivo, D1.cognome as Cognome_Emissivo, D2.nome as Nome_Ricevente, D2.cognome as Cognome_Ricevente, P.data
-from Pagamento as P
-join dipendente D1 on 
-	D1.codass = P.codass AND D1.cf = P.id_dipendente
-join stipendi S on
-	S.codass = P.codass AND S.data = P.data AND S.id_dipendente = P.id_dipendente
-join dipendente D2 on
-	S.soggetto = D2.cf AND S.codass = D2.codass
-where tipo_operazione = 'S';
+INSERT INTO prenotazioni (codass, id_campo, sede, id_tesserato, data, ore, arbitro)
+VALUES
+
+('POLRM', 1, 1, 'PPPCLS73T25L810W', '17-05-2020 18:00', 2,true),
+('POLRM', 3, 1, 'TSSGSI73H28G190O', '17-05-2020 16:30', 2,false),
+('POLRM', 4, 1, 'BRNNMO12M71E893S', '17-05-2020 15:30', 1.5,false),
+('POLRM', 4, 1, 'NTNNGR56D55D668J', '17-05-2020 17:30', 2,false),
+('POLRM', 3, 1, 'PNTRND84D30H108A', '17-05-2020 18:30', 1,false),
+('POLRM', 4, 1, 'FRRZRA72E42E530Z', '17-05-2020 14:30', 2,false),
+
+('POLRM', 1, 1, 'PPPCLS73T25L810W', '20-05-2020 18:00', 2, true),
+('POLRM', 3, 1, 'TSSGSI73H28G190O', '20-05-2020 16:30', 2, false),
+('POLRM', 4, 1, 'BRNNMO12M71E893S', '20-05-2020 15:30', 1.5, false),
+('POLRM', 4, 1, 'NTNNGR56D55D668J', '20-05-2020 17:30', 2, false),
+('POLRM', 3, 1, 'PNTRND84D30H108A', '20-05-2020 18:30', 1, false),
+('POLRM', 4, 1, 'FRRZRA72E42E530Z', '20-05-2020 14:30', 2, false),
+
+('POLRM', 1, 1, 'PPPCLS73T25L810W', '25-05-2020 18:00', 2, true),
+('POLRM', 3, 1, 'TSSGSI73H28G190O', '25-05-2020 16:30', 2, false),
+('POLRM', 4, 1, 'BRNNMO12M71E893S', '25-05-2020 15:30', 1.5, false),
+('POLRM', 4, 1, 'NTNNGR56D55D668J', '25-05-2020 17:30', 2, false),
+('POLRM', 3, 1, 'PNTRND84D30H108A', '25-05-2020 18:30', 1, false),
+('POLRM', 4, 1, 'FRRZRA72E42E530Z', '25-05-2020 14:30', 2, false),
+
+('POLRM', 1, 1, 'PPPCLS73T25L810W', '30-05-2020 18:00', 2, true),
+('POLRM', 3, 1, 'TSSGSI73H28G190O', '30-05-2020 16:30', 2, false),
+('POLRM', 4, 1, 'BRNNMO12M71E893S', '30-05-2020 15:30', 1.5, false),
+('POLRM', 4, 1, 'NTNNGR56D55D668J', '30-05-2020 17:30', 2, false),
+('POLRM', 3, 1, 'PNTRND84D30H108A', '30-05-2020 18:30', 1, false),
+('POLRM', 4, 1, 'FRRZRA72E42E530Z', '30-05-2020 14:30', 2, false),
+
+('POLRM', 1, 1, 'PPPCLS73T25L810W', '10-07-2020 18:00', 2, true),
+('POLRM', 3, 1, 'TSSGSI73H28G190O', '10-7-2020 16:30', 2, false),
+('POLRM', 4, 1, 'BRNNMO12M71E893S', '10-7-2020 15:30', 1.5, false),
+('POLRM', 4, 1, 'NTNNGR56D55D668J', '10-7-2020 17:30', 2, false),
+('POLRM', 3, 1, 'PNTRND84D30H108A', '10-7-2020 18:30', 1, false),
+('POLRM', 4, 1, 'FRRZRA72E42E530Z', '10-7-2020 14:30', 2, false),
+
+('POLRM', 1, 1, 'PPPCLS73T25L810W', '15-07-2020 18:00', 2, true),
+('POLRM', 3, 1, 'TSSGSI73H28G190O', '15-7-2020 16:30', 2, false),
+('POLRM', 4, 1, 'BRNNMO12M71E893S', '15-7-2020 15:30', 1.5, false),
+('POLRM', 4, 1, 'NTNNGR56D55D668J', '15-7-2020 17:30', 2, false),
+('POLRM', 3, 1, 'PNTRND84D30H108A', '15-7-2020 18:30', 1, false),
+('POLRM', 4, 1, 'FRRZRA72E42E530Z', '15-7-2020 14:30', 2, false),
+
+('POLRM', 1, 1, 'PPPCLS73T25L810W', '18-07-2020 18:00', 2, true),
+('POLRM', 3, 1, 'TSSGSI73H28G190O', '18-7-2020 16:30', 2, false),
+('POLRM', 4, 1, 'BRNNMO12M71E893S', '18-7-2020 15:30', 1.5, false),
+('POLRM', 4, 1, 'NTNNGR56D55D668J', '18-7-2020 17:30', 2, false),
+('POLRM', 3, 1, 'PNTRND84D30H108A', '18-7-2020 18:30', 1, false),
+('POLRM', 4, 1, 'FRRZRA72E42E530Z', '18-7-2020 14:30', 2, false),
+
+('POLRM', 1, 1, 'PPPCLS73T25L810W', '22-07-2020 18:00', 2, true),
+('POLRM', 3, 1, 'TSSGSI73H28G190O', '22-7-2020 16:30', 2, false),
+('POLRM', 4, 1, 'BRNNMO12M71E893S', '22-7-2020 15:30', 1.5, false),
+('POLRM', 4, 1, 'NTNNGR56D55D668J', '22-7-2020 17:30', 2, false),
+('POLRM', 3, 1, 'PNTRND84D30H108A', '22-7-2020 18:30', 1, false),
+('POLRM', 4, 1, 'FRRZRA72E42E530Z', '22-7-2020 14:30', 2, false),
+
+('POLRM', 1, 1, 'PPPCLS73T25L810W', '28-07-2020 18:00', 2, true),
+('POLRM', 3, 1, 'TSSGSI73H28G190O', '28-7-2020 16:30', 2, false),
+('POLRM', 4, 1, 'BRNNMO12M71E893S', '28-7-2020 15:30', 1.5, false),
+('POLRM', 4, 1, 'NTNNGR56D55D668J', '28-7-2020 17:30', 2, false),
+('POLRM', 3, 1, 'PNTRND84D30H108A', '28-7-2020 18:30', 1, false),
+('POLRM', 4, 1, 'FRRZRA72E42E530Z', '28-7-2020 14:30', 2, false),
+
+
+('POLRM', 5, 1, 'PPPCLS73T25L810W', '18-07-2020 18:00', 2, true),
+('POLRM', 6, 1, 'TSSGSI73H28G190O', '18-7-2020 16:30', 2, false),
+('POLRM', 5, 1, 'BRNNMO12M71E893S', '18-7-2020 15:30', 1.5, false),
+('POLRM', 6, 1, 'NTNNGR56D55D668J', '18-7-2020 17:30', 2, false),
+('POLRM', 5, 1, 'PNTRND84D30H108A', '18-7-2020 18:30', 1, false),
+('POLRM', 6, 1, 'FRRZRA72E42E530Z', '18-7-2020 14:30', 2, false),
+
+('POLRM', 5, 1, 'PPPCLS73T25L810W', '20-07-2020 18:00', 2, true),
+('POLRM', 6, 1, 'TSSGSI73H28G190O', '20-7-2020 16:30', 2, false),
+('POLRM', 5, 1, 'BRNNMO12M71E893S', '20-7-2020 15:30', 1.5, false),
+('POLRM', 6, 1, 'NTNNGR56D55D668J', '20-7-2020 17:30', 2, false),
+('POLRM', 5, 1, 'PNTRND84D30H108A', '20-7-2020 18:30', 1, false),
+('POLRM', 6, 1, 'FRRZRA72E42E530Z', '20-7-2020 14:30', 2, false),
+
+('POLRM', 5, 1, 'PPPCLS73T25L810W', '12-07-2020 18:00', 2, true),
+('POLRM', 6, 1, 'TSSGSI73H28G190O', '12-7-2020 16:30', 2, false),
+('POLRM', 5, 1, 'BRNNMO12M71E893S', '12-7-2020 15:30', 1.5, false),
+('POLRM', 6, 1, 'NTNNGR56D55D668J', '12-7-2020 17:30', 2, false),
+('POLRM', 5, 1, 'PNTRND84D30H108A', '12-7-2020 18:30', 1, false),
+('POLRM', 6, 1, 'FRRZRA72E42E530Z', '12-7-2020 14:30', 2, false),
+('POLRM', 5, 1, 'BRNNMO12M71E893S', '12-7-2020 10:30', 2, false),
+
+('POLRM', 1, 1, 'LLLMFR13P28E390F', '15-05-2020 16:30', 1, false),
+
+('POLRM', 1, 1, 'PPPCLS73T25L810W', '15-05-2020 18:00', 2, true),
+('POLRM', 3, 1, 'TSSGSI73H28G190O', '15-05-2020 16:30', 2, false),
+('POLRM', 4, 1, 'BRNNMO12M71E893S', '15-05-2020 15:30', 1.5, false),
+('POLRM', 4, 1, 'NTNNGR56D55D668J', '15-05-2020 17:30', 2, false),
+('POLRM', 3, 1, 'PNTRND84D30H108A', '15-05-2020 18:30', 1, false),
+('POLRM', 4, 1, 'FRRZRA72E42E530Z', '15-05-2020 14:30', 2, false);
+
+
+select *
+from pagamento
+
+
+
+
 
 
 
