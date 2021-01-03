@@ -1,11 +1,11 @@
 
 /* Query estratto conto o simile */
-SELECT A.codice, A.ragsoc, saldo, 
+SELECT A.codice, A.ragsoc, saldo 
 FROM associazione A
 LEFT JOIN (
 	SELECT codass, sum(importo) as saldo
 	FROM pagamento P
-	WHERE extract(year from P.data) = 2021
+	WHERE extract(year from P.data) = 2020
 	GROUP BY codass
 ) as P ON P.codass = A.codice
 GROUP BY A.codice, A.ragsoc, saldo
@@ -50,11 +50,11 @@ JOIN tipologia_campo T ON T.codass = C.codass AND T.id = C.tipologia
 GROUP BY (sport)
 
 /* Tesserati che hanno fatto almeno 2 prenotazioni nel 2020 */
-SELECT T.cf as codice_fiscale, T.cognome, T.nome, count(data) 
+SELECT T.cf as codice_fiscale, T.cognome, T.nome, count(data), T.codass
 FROM prenotazioni P
 JOIN tesserato T ON P.codass = T.codass AND P.id_tesserato = T.cf
-WHERE T.codass = 'POLRM' AND extract(YEAR from P.data) = 2020
-GROUP BY T.cf, T.cognome, T.nome
+WHERE extract(YEAR from P.data) = 2020 --AND T.codass = 'POLRM'
+GROUP BY T.cf, T.cognome, T.nome, T.codass
 HAVING count(data) > 2
 
 select *
