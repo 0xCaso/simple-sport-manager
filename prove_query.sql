@@ -58,6 +58,7 @@ GROUP BY T.cf, T.cognome, T.nome
 HAVING count(data) > 2
 
 
+/* Query estratto conto annuale con differenza rispetto all'anno precedente di TUTTE le associazioni */
 DROP VIEW IF EXISTS saldo_annuale;
 CREATE VIEW saldo_annuale AS
 	SELECT codass, sum(importo) as saldo
@@ -72,18 +73,17 @@ CREATE VIEW saldo_anno_prec AS
 	WHERE extract(year from P.data) = (extract(year from CURRENT_DATE)-2)
 	GROUP BY codass;
 
-/* Query estratto conto o simile */
 SELECT A.codice, A.ragsoc, SA.saldo as "Saldo Anno Corrente", SP.saldo as "Saldo Anno Precedente",
 CASE
     WHEN SA.saldo > SP.saldo THEN 'POSITIVO'
 	WHEN SA.saldo = SP.saldo THEN 'PARI'
+	WHEN SA.saldo IS NULL OR SP.saldo IS NULL THEN 'non disponibile'
     ELSE 'NEGATIVO'
 END AS Stato,
---ROUND(((SA.saldo-SP.saldo)/SA.saldo)::numeric, 2)
-
 CASE
-	WHEN SA.saldo > SP.saldo THEN CONCAT('+',ROUND((((SA.saldo-SP.saldo)/SP.saldo)*100)::numeric, 2))
-	WHEN SA.saldo IS NULL AND SP.saldo IS NULL THEN '0'
+	WHEN SA.saldo > SP.saldo AND SP.saldo > 0::money THEN CONCAT('+',ROUND((((SA.saldo-SP.saldo)/SP.saldo)*100)::numeric, 2))
+	WHEN SA.saldo > SP.saldo AND SP.saldo < 0::money THEN CONCAT('+',ROUND((((SA.saldo-SP.saldo)/SP.saldo)*100)::numeric, 2)*-1)
+	WHEN SA.saldo IS NULL OR SP.saldo IS NULL THEN 'non calcolabile'
 	ELSE CONCAT('-',ROUND((((SA.saldo-SP.saldo)/SP.saldo)*100)::numeric, 2))
 END AS Percentuale
 
@@ -92,7 +92,8 @@ LEFT JOIN saldo_annuale as SA ON SA.codass = A.codice
 LEFT JOIN saldo_anno_prec as SP ON SP.codass = A.codice
 GROUP BY A.codice, A.ragsoc, SA.saldo, SP.saldo
 
---, CONCAT('Saldo ',to_char(CURRENT_DATE, 'YYYY'))
+--		ROUND((((SA.saldo-SP.saldo)/SP.saldo)*100)::numeric, 2))
+--SELECT CONCAT('-',ROUND((((-120.00-(70.00))/70.00)*100)::numeric, 2))
 
 select *
 from campo
