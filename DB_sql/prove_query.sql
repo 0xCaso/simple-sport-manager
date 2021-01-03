@@ -57,43 +57,6 @@ WHERE T.codass = 'POLRM' AND extract(YEAR from P.data) = 2020
 GROUP BY T.cf, T.cognome, T.nome
 HAVING count(data) > 2
 
-
-DROP VIEW IF EXISTS saldo_annuale;
-CREATE VIEW saldo_annuale AS
-	SELECT codass, sum(importo) as saldo
-	FROM pagamento P
-	WHERE extract(year from P.data) = (extract(year from CURRENT_DATE)-1)
-	GROUP BY codass;
-
-DROP VIEW IF EXISTS saldo_anno_prec;
-CREATE VIEW saldo_anno_prec AS
-	SELECT codass, sum(importo) as saldo
-	FROM pagamento P
-	WHERE extract(year from P.data) = (extract(year from CURRENT_DATE)-2)
-	GROUP BY codass;
-
-/* Query estratto conto o simile */
-SELECT A.codice, A.ragsoc, SA.saldo as "Saldo Anno Corrente", SP.saldo as "Saldo Anno Precedente",
-CASE
-    WHEN SA.saldo > SP.saldo THEN 'POSITIVO'
-	WHEN SA.saldo = SP.saldo THEN 'PARI'
-    ELSE 'NEGATIVO'
-END AS Stato,
---ROUND(((SA.saldo-SP.saldo)/SA.saldo)::numeric, 2)
-
-CASE
-	WHEN SA.saldo > SP.saldo THEN CONCAT('+',ROUND((((SA.saldo-SP.saldo)/SP.saldo)*100)::numeric, 2))
-	WHEN SA.saldo IS NULL AND SP.saldo IS NULL THEN '0'
-	ELSE CONCAT('-',ROUND((((SA.saldo-SP.saldo)/SP.saldo)*100)::numeric, 2))
-END AS Percentuale
-
-FROM associazione A 
-LEFT JOIN saldo_annuale as SA ON SA.codass = A.codice
-LEFT JOIN saldo_anno_prec as SP ON SP.codass = A.codice
-GROUP BY A.codice, A.ragsoc, SA.saldo, SP.saldo
-
---, CONCAT('Saldo ',to_char(CURRENT_DATE, 'YYYY'))
-
 select *
 from campo
 
