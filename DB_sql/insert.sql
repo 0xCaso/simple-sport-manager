@@ -1,214 +1,3 @@
-CREATE TABLE Associazione (
-	codice 		varchar(20),
-	ragsoc 		varchar(80) NOT NULL,
-	sito		varchar(150) NOT NULL,
-	email		varchar(80) NOT NULL,
-	password 	varchar(50) NOT NULL,
-	PRIMARY KEY(codice)
-);
-
-CREATE TABLE Tesserato (
-	codass					varchar(20),
-	cf						char(16),	/* Fixed */
-	nome					varchar(80) NOT NULL,
-	cognome					varchar(80) NOT NULL,
-	data_nascita			date NOT NULL,
-	email					varchar(80) NOT NULL,
-	password				varchar(50) NOT NULL,
-	telefono				varchar(12), /* con 12 caratteri prendiamo quasi la totalità dei numeri */
-	arbitro					bool DEFAULT false,
-	data_iscrizione			date NOT NULL,
-	scadenza_iscrizione		date NOT NULL,
-	sesso 					char(1) NOT NULL,
-	PRIMARY KEY(codass, cf),
-	FOREIGN KEY (codass) REFERENCES Associazione(codice)
-);
-
-/*
-CREATE TABLE iscrizione (
-	codass					varchar(20),
-	id_tesserato 			char(16),
-	data_iscrizione			date NOT NULL,
-	scadenza_iscrizione		date NOT NULL,
-	PRIMARY KEY (codass, id_tesserato),
-	FOREIGN KEY (codass) REFERENCES Associazione(codice),
-	FOREIGN KEY (id_tesserato) REFERENCES Tesserato(cf)
-);
-*/
-
-CREATE TABLE Citta (
-	istat			char(6),
-	cap				char(5),
-	nome			varchar(100) NOT NULL,
-	provincia		char(2) NOT NULL,
-	regione			char(3) NOT NULL,
-	PRIMARY KEY (istat)
-);
-
-CREATE TABLE Sede (
-	codass			varchar(20),
-	codice			int,
-	via				varchar(150) NOT NULL,
-	cod_civico 		int NOT NULL
-	cod_citta		char(6) NOT NULL,
-	nome			varchar(150) NOT NULL,
-	telefono		varchar(12),
-	PRIMARY KEY (codass, codice),
-	FOREIGN KEY (codass) 		REFERENCES Associazione(codice),
-	FOREIGN KEY (cod_citta)		REFERENCES Citta(istat)
-);
-
-CREATE TABLE Fornitore (
-	piva				char(11),
-	ragione_soc			varchar(150) NOT NULL,
-	email				varchar(80) NOT NULL,
-	telefono			varchar(12),
-	PRIMARY KEY (piva)
-);
-
-CREATE TABLE contratti (
-	codass				varchar(20),
-	cod_fornitore		char(11),
-	data_inizio			date NOT NULL,
-	data_fine			date, /* NULL fino alla chiusura del contratto => senza un rinnovo */
-	PRIMARY KEY (codass, cod_fornitore),
-	FOREIGN KEY (codass) REFERENCES Associazione(codice),
-	FOREIGN KEY (cod_fornitore) REFERENCES Fornitore(piva)
-);
-
-CREATE TABLE Campo (
-	codass			varchar(20),
-	id				int,
-	cod_sede		int,
-	tipologia		int NOT NULL,
-	attrezzatura	bool DEFAULT false,
-	PRIMARY KEY (codass, id, cod_sede),
-	FOREIGN KEY (codass, cod_sede)	REFERENCES Sede(codass, codice),
-	FOREIGN KEY (tipologia)			REFERENCES tipologia_campo(id)
-);
-
-CREATE TABLE prenotazioni (
-	codass			varchar(20),
-	id_campo		int,
-	sede			int,
-	id_tesserato	char(16) NOT NULL,
-	data			timestamp NOT NULL,
-	ore				float NOT NULL,
-	arbitro			bool DEFAULT false,
-	PRIMARY KEY (codass, id_campo, sede, data),
-	FOREIGN KEY (codass, id_campo, sede) REFERENCES Campo(codass, id, cod_sede)
-);
-
-ALTER TABLE prenotazioni
-ADD column ore float NOT NULL
-
-CREATE TABLE tipologia_campo (
-	codass			varchar(20),
-	id				int,
-	sport			varchar(50), /* NULL = campo generico */
-	terreno			varchar(50) NOT NULL,
-	larghezza		int NOT NULL,
-	lunghezza		int NOT NULL,
-	PRIMARY KEY (codass, id),
-	FOREIGN KEY (codass)	REFERENCES Associazione(codice)
-);
-
-CREATE TABLE Dipendente (
-	codass				varchar(20),
-	cf					char(16),
-	nome				varchar(80) NOT NULL,
-	cognome				varchar(80) NOT NULL,
-	sesso				char(1) NOT NULL,
-	data_nascita		date NOT NULL,
-	email				varchar(80) NOT NULL,
-	password			varchar(50) NOT NULL,
-	telefono			varchar(12),
-	grado				int NOT NULL,
-	data_assunzione 	date NOT NULL,
-	data_fine			date, /* if IS NOT NULL => licenziato/pensione */
-	cod_sede			int,
-	PRIMARY KEY (codass, cf), /* codass in chiave altrimenti un dipendente non potrebbe cambiare associazione (es. licenziamento) */
-	FOREIGN KEY (codass)			REFERENCES Associazione(codice),
-	FOREIGN KEY (codass, cod_sede)	REFERENCES Sede(codass, codice),
-	FOREIGN KEY (grado)				REFERENCES grado_dipendenti(id)
-);
-
-CREATE TABLE grado_dipendenti (
-	id				int,
-	descrizione		varchar(50) NOT NULL,
-	PRIMARY KEY (id)
-)
-
-
-CREATE TABLE Pagamento (
-	codass			varchar(20),	
-	importo			money NOT NULL, /* (> 0) => entrata (< 0) => uscita */
-	descrizione		varchar(255) NOT NULL,
-	data			timestamp,
-	id_dipendente	char(16),
-	id_soggetto		varchar(16) NOT NULL,
-	tipo_operazione int NOT NULL,
-	PRIMARY KEY (codass, data, id_dipendente),
-	FOREIGN KEY (codass, id_dipendente) 	REFERENCES Dipendente(codass, cf),
-	FOREIGN KEY (tipo_operazione) 			REFERENCES tipo_operazione(codice)
-);
-
-CREATE TABLE tipo_operazione (
-	codice			int,
-	descrizione		varchar(255) NOT NULL,
-	PRIMARY KEY (codice)
-);
-
-
-CREATE TABLE Pagamento (
-	codass				varchar(20),
-	data				timestamp,
-	id_dipendente		char(16),
-	importo				money NOT NULL,
-	tipo_operazione		char(1) NOT NULL,
-	PRIMARY KEY (codass, data, id_dipendente), /* codass in chiave sempre per via del licenziamento e coerenza con la PKey del dipendente */
-	FOREIGN KEY (codass, id_dipendente) REFERENCES Dipendente(codass, cf)
-);
-/*
-	tipo_operazione:
-		F => Fattura
-		S => Stipendio
-		E => Esborso
-*/
-
-CREATE TABLE stipendi (
-	codass				varchar(20),
-	data				timestamp,
-	id_dipendente		char(16),
-	soggetto			char(16),		
-	PRIMARY KEY (codass, data, id_dipendente, soggetto),
-	FOREIGN KEY (codass, data, id_dipendente) REFERENCES Pagamento(codass, data, id_dipendente),
-	FOREIGN KEY (codass, soggetto) REFERENCES Dipendente(codass, cf)
-);
-
-CREATE TABLE fatture (
-	codass				varchar(20),
-	data				timestamp,
-	id_dipendente		char(16),
-	tesserato			char(16) NOT NULL, /* Arbitro o Atleta */
-	descrizione			varchar(255),
-	progressivo			int,
-	PRIMARY KEY (codass, data, id_dipendente, progressivo),
-	FOREIGN KEY (codass, data, id_dipendente) REFERENCES Pagamento(codass, data, id_dipendente),
-	FOREIGN KEY (codass, tesserato) REFERENCES Tesserato(codass, cf)
-);
-
-CREATE TABLE esborsi (
-	codass				varchar(20),
-	data				timestamp,
-	id_dipendente		char(16),
-	id_fornitore		char(16) NOT NULL,
-	descrizione			varchar(255),
-	PRIMARY KEY (codass, data, id_dipendente, id_fornitore),
-	FOREIGN KEY (codass, data, id_dipendente) REFERENCES Pagamento(codass, data, id_dipendente),
-	FOREIGN KEY (id_fornitore) REFERENCES Fornitore(piva)
-);
-
 /* Popolamento associazioni */
 INSERT INTO associazione (codice, ragsoc, sito,	email, password)
 VALUES
@@ -471,7 +260,7 @@ VALUES
 ('POLRM', 5, 1, 5, true),
 ('POLRM', 6, 1, 6, true),
 ('POLRM', 7, 1, 5, true),
-('POLRM', 8, 1, 6, true),;
+('POLRM', 8, 1, 6, true);
 
 INSERT INTO campo (codass, id, cod_sede, tipologia, attrezzatura)
 VALUES
@@ -625,9 +414,9 @@ VALUES
 ('TCPG', 1, 2, 'FRVLRS81R12I482L', '22/11/2020 20:00:00', 1, false),
 ('TCPG', 1, 1, 'CVNMNL81M63L817G', '13/02/2020 14:30:00', 2, true),
 ('TCPG', 1, 1, 'CNLTMR61D51L238M', '17/02/2020 09:30:00', 1, false),
-('TCPG', 1, 2, 'PTRDNT94L06G428W', '27/02/2020 10:30:00', 1.5, false),
+('TCPG', 1, 2, 'FRVLRS81R12I482L', '27/02/2020 10:30:00', 1.5, false),
 ('TCPG', 2, 2, 'LTNPIA36M62H414P', '26/06/2020 12:00:00', 1, false),
-('TCPG', 3, 1, 'PTRDNT94L06G428W', '07/10/2020 17:00:00', 1, true),
+('TCPG', 3, 1, 'FRVLRS81R12I482L', '07/10/2020 17:00:00', 1, true),
 ('TCPG', 4, 1, 'VRGDNL10M19E727A', '07/07/2020 18:30:00', 1.5, false),
 ('TCPG', 2, 1, 'MZZLRC35A26A038K', '17/11/2020 15:00:00', 1, true),
 ('TCPG', 2, 2, 'CVNMNL81M63L817G', '05/09/2020 11:00:00', 2, true),
@@ -660,7 +449,7 @@ VALUES
 ('CAME', 1, 2, 'BMNNDN69S42E423C', '15/07/2020 17:30:00', 1, true),
 ('CAME', 2, 1, 'MNCBND12B06A227X', '22/07/2020 09:30:00', 1, true),
 ('CAME', 1, 1, 'GBRMCR53R06D703U', '31/08/2020 10:30:00', 1, true),
-('CAME', 1, 1, 'DMTGDI94S09E669C', '03/09/2020 14:00:00', 2, false),
+('CAME', 1, 1, 'BMNNDN69S42E423C', '03/09/2020 14:00:00', 2, false),
 ('CAME', 1, 2, 'BMNNDN69S42E423C', '04/09/2020 16:00:00', 2, true),
 ('CAME', 2, 1, 'BRNMRO73P22G619O', '13/10/2020 15:30:00', 1.5, false),
 ('CAME', 2, 1, 'LBTLCU56H53C659Q', '19/10/2020 11:00:00', 1, false),
@@ -695,9 +484,9 @@ VALUES
 ('TCPG', '22/11/2020 20:00:00', 'CRBBDS85M15E507I', 'FRVLRS81R12I482L', 'Pagamento prenotazione', '5'),
 ('TCPG', '13/02/2020 14:30:00', 'MNZMRO97S22M119N', 'CVNMNL81M63L817G', 'Pagamento prenotazione', '6'),
 ('TCPG', '17/02/2020 09:30:00', 'CRBBDS85M15E507I', 'CNLTMR61D51L238M', 'Pagamento prenotazione', '7'),
-('TCPG', '27/02/2020 10:30:00', 'MNZMRO97S22M119N', 'PTRDNT94L06G428W', 'Pagamento prenotazione', '8'),
+('TCPG', '27/02/2020 10:30:00', 'MNZMRO97S22M119N', 'FRVLRS81R12I482L', 'Pagamento prenotazione', '8'),
 ('TCPG', '26/06/2020 12:00:00', 'MNZMRO97S22M119N', 'LTNPIA36M62H414P', 'Pagamento prenotazione', '9'),
-('TCPG', '07/10/2020 17:00:00', 'PTRDNT94L06G428W', 'PTRDNT94L06G428W', 'Pagamento prenotazione', '10'),
+('TCPG', '07/10/2020 17:00:00', 'PTRDNT94L06G428W', 'FRVLRS81R12I482L', 'Pagamento prenotazione', '10'),
 ('TCPG', '07/07/2020 18:30:00', 'CRBBDS85M15E507I', 'VRGDNL10M19E727A', 'Pagamento prenotazione', '11'),
 ('TCPG', '17/11/2020 15:00:00', 'MNZMRO97S22M119N', 'MZZLRC35A26A038K', 'Pagamento prenotazione', '12'),
 ('TCPG', '05/09/2020 11:00:00', 'PTRDNT94L06G428W', 'CVNMNL81M63L817G', 'Pagamento prenotazione', '13'),
@@ -730,7 +519,7 @@ VALUES
 ('CAME', '15/07/2020 17:30:00', 'SCCTCR93M24L183J', 'BMNNDN69S42E423C', 'Pagamento prenotazione', '6'),
 ('CAME', '22/07/2020 09:30:00', 'BRCGTN93A23A193B', 'MNCBND12B06A227X', 'Pagamento prenotazione', '7'),
 ('CAME', '31/08/2020 10:30:00', 'BRCGTN93A23A193B', 'GBRMCR53R06D703U', 'Pagamento prenotazione', '8'),
-('CAME', '03/09/2020 14:00:00', 'BRCGTN93A23A193B', 'DMTGDI94S09E669C', 'Pagamento prenotazione', '9'),
+('CAME', '03/09/2020 14:00:00', 'BRCGTN93A23A193B', 'BMNNDN69S42E423C', 'Pagamento prenotazione', '9'),
 ('CAME', '04/09/2020 16:00:00', 'SCCTCR93M24L183J', 'BMNNDN69S42E423C', 'Pagamento prenotazione', '10'),
 ('CAME', '13/10/2020 15:30:00', 'SCCTCR93M24L183J', 'BRNMRO73P22G619O', 'Pagamento prenotazione', '11'),
 ('CAME', '19/10/2020 11:00:00', 'BRCGTN93A23A193B', 'LBTLCU56H53C659Q', 'Pagamento prenotazione', '12'),
@@ -844,7 +633,3 @@ VALUES
 ('CAME', '07/09/2020 18:00:00', 'FNLRFL00L58F216F', '-100', 'E'),
 ('POLRM', '23/09/2020 20:30:00', 'MSMRTT97R11C661I', '-200', 'E'),
 ('POLRM', '07/01/2021 08:00:00', 'BSCRCL88H09G520N', '-200', 'E');
-
-select *
-from pagamento
-
