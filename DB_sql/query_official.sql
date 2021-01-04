@@ -62,7 +62,8 @@ JOIN Citta C 					ON C.istat = S.cod_citta;
 
 /*
 	La Polisportiva Romana (codice POLRM) vuole organizzare un evento calcistico per i suoi tesserati. Deve decidere in quale sede, quale campo e
-	quale fascia oraria siano i più adatti per organizzare l'evento. Nella query si indica 
+	quale fascia oraria siano i più adatti per organizzare l'evento. Nella query si indica il nome della sede, il numero del campo, il relativo
+	terreno e il numero di prenotazioni totali in cui compare nelle due fasce orarie mattino (dalle 8 alle 12) e pomeriggio (dalle 13 alle 21).
 */
 DROP VIEW IF EXISTS utilizzo_campi_pomeriggio;
 CREATE VIEW utilizzo_campi_pomeriggio AS
@@ -92,4 +93,5 @@ LEFT JOIN utilizzo_campi_pomeriggio ucp
 	ON ucp.codass = c.codass AND ucp.sede = c.cod_sede AND ucp.id_campo = c.id
 LEFT JOIN utilizzo_campi_mattino ucm 
 	ON ucm.codass = c.codass AND ucm.sede = c.cod_sede AND ucm.id_campo = c.id
-WHERE c.codass = 'POLRM' AND c.attrezzatura AND t.sport like '_alcio%'
+WHERE c.codass = 'POLRM' AND c.attrezzatura AND t.sport like '_alcio%' 
+AND (tot_p_mattino IS NOT NULL OR tot_p_pomeriggio IS NOT NULL)
