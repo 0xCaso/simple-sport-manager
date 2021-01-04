@@ -95,3 +95,23 @@ LEFT JOIN utilizzo_campi_mattino ucm
 	ON ucm.codass = c.codass AND ucm.sede = c.cod_sede AND ucm.id_campo = c.id
 WHERE c.codass = 'POLRM' AND c.attrezzatura AND t.sport like '_alcio%' 
 AND (tot_p_mattino IS NOT NULL OR tot_p_pomeriggio IS NOT NULL)
+
+
+/* Saldo sedi associazione Calciatori Mestrini (codice CAME), dipendenti attualmente attivi e totale prenotazioni relative a quella sede nell'anno precendente */
+SELECT s.nome as nome_sede, sum(importo) as saldo, attivi as dipendenti_attivi, prenotazioni_anno
+FROM sede s
+LEFT JOIN dipendente d ON d.codass = s.codass AND d.cod_sede = s.codice
+LEFT JOIN pagamento p ON p.codass = s.codass AND p.id_dipendente = d.cf
+LEFT JOIN (SELECT codass, cod_sede, count(*) as attivi
+			FROM dipendente d
+			WHERE data_fine IS NULL
+			GROUP BY codass, cod_sede
+			ORDER BY codass, cod_sede) as ta ON ta.codass = s.codass AND ta.cod_sede = s.codice
+LEFT JOIN (SELECT codass, sede, count(*) as prenotazioni_anno
+			FROM prenotazioni
+			WHERE extract(year from data) = extract(year from CURRENT_DATE)-1
+			GROUP BY codass, sede) as pr ON pr.codass = s.codass AND pr.sede = s.codice
+WHERE 
+s.codass = 'CAME' AND 
+(extract(year from p.data) = extract(year from CURRENT_DATE)-1 or importo is null)
+GROUP BY s.codice, s.nome, s.codass, attivi, prenotazioni_anno

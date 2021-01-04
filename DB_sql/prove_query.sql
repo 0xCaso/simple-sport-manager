@@ -72,50 +72,58 @@ from campo
 /*
 	IDEE:
 	- Volendo calcolare anche la media di inserimenti al giorno.
-	- Mese in cui ha registrato il maggior numero di registrazioni di nuovi tesserati.
-	- Sport, terreno e Fascia oraria in cui vengono usati i campi
+	- Mese in cui ha registrato il maggior numero di registrazioni di nuovi tesserati
 */
 
-DROP VIEW IF EXISTS utilizzo_campi_pomeriggio;
-CREATE VIEW utilizzo_campi_pomeriggio AS
-	SELECT p.codass, p.sede, p.id_campo, count(*) as tot_p_pomeriggio
-	FROM prenotazioni p
-	JOIN campo c ON c.codass = p.codass AND c.id = p.id_campo
-	WHERE date_part('hour', p.data) between 13 AND 21
-	GROUP BY p.codass, p.id_campo, p.sede
-	ORDER BY p.codass, p.sede;
-
-DROP VIEW IF EXISTS utilizzo_campi_mattino;
-CREATE VIEW utilizzo_campi_mattino AS
-	SELECT p.codass, p.sede, p.id_campo, count(*) as tot_p_mattino
-	FROM prenotazioni p
-	JOIN campo c ON c.codass = p.codass AND c.id = p.id_campo
-	WHERE date_part('hour', p.data) between 8 AND 12
-	GROUP BY p.codass, p.id_campo, p.sede
-	ORDER BY p.codass, p.sede;
-
-SELECT s.nome as nome_sede, c.id as num_campo, t.sport, t.terreno, tot_p_mattino, tot_p_pomeriggio
-FROM campo c
-LEFT JOIN tipologia_campo t 
-	ON t.codass = c.codass AND t.id = c.tipologia
-LEFT JOIN sede s 
-	ON s.codass = c.codass AND s.codice = c.cod_sede
-LEFT JOIN utilizzo_campi_pomeriggio ucp 
-	ON ucp.codass = c.codass AND ucp.sede = c.cod_sede AND ucp.id_campo = c.id
-LEFT JOIN utilizzo_campi_mattino ucm 
-	ON ucm.codass = c.codass AND ucm.sede = c.cod_sede AND ucm.id_campo = c.id
-WHERE c.codass = 'POLRM' AND c.attrezzatura
-
-select id_campo, count(*)
-from prenotazioni
-where codass = 'POLRM'
-GROUP BY codass, id_campo, sede
-order by id_campo
+SELECT codass, cod_sede, count(*) as attivi
+FROM dipendente d
+WHERE data_fine IS NULL
+GROUP BY codass, cod_sede
+ORDER BY codass, cod_sede
 
 
 
 
 
+SELECT s.nome as nome_sede, sum(importo) as saldo, attivi as dipendenti_attivi, prenotazioni_anno
+FROM sede s
+LEFT JOIN dipendente d ON d.codass = s.codass AND d.cod_sede = s.codice
+LEFT JOIN pagamento p ON p.codass = s.codass AND p.id_dipendente = d.cf
+LEFT JOIN (SELECT codass, cod_sede, count(*) as attivi
+			FROM dipendente d
+			WHERE data_fine IS NULL
+			GROUP BY codass, cod_sede
+			ORDER BY codass, cod_sede) as ta ON ta.codass = s.codass AND ta.cod_sede = s.codice
+LEFT JOIN (SELECT codass, sede, count(*) as prenotazioni_anno
+			FROM prenotazioni
+			WHERE extract(year from data) = extract(year from CURRENT_DATE)-1
+			GROUP BY codass, sede) as pr ON pr.codass = s.codass AND pr.sede = s.codice
+WHERE 
+s.codass = 'CAME' AND 
+(extract(year from p.data) = extract(year from CURRENT_DATE)-1 or importo is null)
+GROUP BY s.codice, s.nome, s.codass, attivi, prenotazioni_anno
+
+
+SELECT codass, sede, count(*) as prenotazioni_anno
+FROM prenotazioni
+WHERE extract(year from data) = extract(year from CURRENT_DATE)-1
+GROUP BY codass, sede
+
+select cod_sede, s.nome, cf, sum(importo)
+from pagamento p
+join dipendente d ON d.codass = p.codass
+join sede s ON s.codass = p.codass AND s.codice = d.cod_sede
+where p.codass = 'CAME' and extract(year from P.data) = 2020
+group by p.codass, cod_sede, cf, s.nome
+
+
+UPDATE dipendente
+SET cod_sede = 1
+WHERE codass='CAME' AND cf='SCCTCR93M24L183J'; 
+
+select *
+from dipendente
+where cf = 'SCCTCR93M24L183J'
 
 SELECT date_part('hour', now())
 

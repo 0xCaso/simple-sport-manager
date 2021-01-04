@@ -131,7 +131,7 @@ INSERT INTO dipendente (codass, cognome, nome, sesso, data_nascita, cf, telefono
 VALUES
 ('JSDB', 'Bertugli','Giovanna','F','1998-09-05','BRTGNN98P45C524P','0376/270098','giovanna.bertugli@gmail.com','BQ88vibxC77P', 10, '2012-12-15', NULL, 1),
 ('POLRM', 'Musumeci','Aristotele','M','1997-10-11','MSMRTT97R11C661I','0131/640624','amusumeci@gmail.com','RR90vaugW52R', 20, '2013-11-16', NULL, 1),
-('CAME', 'Sacchino','Tancredi','M','1993-08-24','SCCTCR93M24L183J','0721/319561','tancredi.sacchino@gmail.com','HK49hsubV04U', 10, '2014-9-25', NULL, 2),
+('CAME', 'Sacchino','Tancredi','M','1993-08-24','SCCTCR93M24L183J','0721/319561','tancredi.sacchino@gmail.com','HK49hsubV04U', 10, '2014-9-25', NULL, 1),
 ('JSDB', 'Trapattoni','Emilio','M','1988-06-02','TRPMLE88H02L696X','0437/824923','etrapattoni@gmail.com','YM40btbiT75H', 30, '2015-5-14', NULL, 2),
 ('JSDB', 'Gabriele','Clelia','F','1996-05-25','GBRCLL96E65F726F','011/664877','clel.gabr@gmail.com','KR96xwrdB91C', 10, '2016-6-23', NULL, 2),
 ('JSDB', 'Coloso','Enrica','F','1993-11-29','CLSNRC93S69H949L','031/966744','enri.colo@gmail.com','DD81pfgbS30N', 20, '2017-7-9', NULL, 2),
