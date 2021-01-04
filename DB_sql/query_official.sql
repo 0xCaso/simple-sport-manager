@@ -30,3 +30,66 @@ FROM associazione A
 LEFT JOIN saldo_annuale as SA ON SA.codass = A.codice
 LEFT JOIN saldo_anno_prec as SP ON SP.codass = A.codice
 GROUP BY A.codice, A.ragsoc, SA.saldo, SP.saldo
+
+/* 
+	Indicare per ogni associazione, le sedi che hanno registrato il maggior numero di prenotazioni lo scorso anno e
+	indicare la media delle prenotazioni mensili
+	
+	Spiegazione:
+	Utile ad esempio per avere una statistica delle prenotazioni medie mensili registrate sulla base di dati da tutte le
+	associazioni.
+	Es. pensa a server con inserimenti mensili o annuali
+*/
+DROP VIEW IF EXISTS prenotazioni_per_sede;
+CREATE VIEW prenotazioni_per_sede AS
+	SELECT P.codass, P.sede as cod_sede, count(P.sede) as num, ROUND(count(P.sede)/12.0,2) as prenotazioni_mensili
+	FROM prenotazioni P
+	JOIN Sede S ON P.sede = S.codice AND P.codass = S.codass
+	JOIN Associazione A ON A.codice = S.codass
+	JOIN Citta C 		ON C.istat = S.cod_citta
+	WHERE extract(year from P.data) = (extract(year from CURRENT_DATE)-1)
+	GROUP BY P.codass, P.sede;
+
+SELECT A.ragsoc as associazione, S.nome as nome_sede, C.nome as citta, S.via, M.max as prenotazioni_totali, prenotazioni_mensili
+FROM prenotazioni_per_sede P
+JOIN (SELECT codass, max(num) as max
+		FROM prenotazioni_per_sede
+		group by codass) M 		ON P.codass = M.codass AND num = max
+JOIN Associazione A				ON A.codice = P.codass
+JOIN Sede S 					ON S.codass = P.codass AND S.codice = cod_sede
+JOIN Citta C 					ON C.istat = S.cod_citta;
+
+
+/*
+	La Polisportiva Romana (codice POLRM) vuole organizzare un evento calcistico per i suoi tesserati. Deve decidere in quale sede, quale campo e
+	quale fascia oraria siano i più adatti per organizzare l'evento. Nella query si indica 
+*/
+DROP VIEW IF EXISTS utilizzo_campi_pomeriggio;
+CREATE VIEW utilizzo_campi_pomeriggio AS
+	SELECT p.codass, p.sede, p.id_campo, count(*) as tot_p_pomeriggio
+	FROM prenotazioni p
+	JOIN campo c ON c.codass = p.codass AND c.id = p.id_campo
+	WHERE date_part('hour', p.data) between 13 AND 21
+	GROUP BY p.codass, p.id_campo, p.sede
+	ORDER BY p.codass, p.sede;
+
+DROP VIEW IF EXISTS utilizzo_campi_mattino;
+CREATE VIEW utilizzo_campi_mattino AS
+	SELECT p.codass, p.sede, p.id_campo, count(*) as tot_p_mattino
+	FROM prenotazioni p
+	JOIN campo c ON c.codass = p.codass AND c.id = p.id_campo
+	WHERE date_part('hour', p.data) between 8 AND 12
+	GROUP BY p.codass, p.id_campo, p.sede
+	ORDER BY p.codass, p.sede;
+
+SELECT s.nome as nome_sede, c.id as num_campo, t.sport, t.terreno, tot_p_mattino, tot_p_pomeriggio
+FROM campo c
+LEFT JOIN tipologia_campo t 
+	ON t.codass = c.codass AND t.id = c.tipologia
+LEFT JOIN sede s 
+	ON s.codass = c.codass AND s.codice = c.cod_sede
+LEFT JOIN utilizzo_campi_pomeriggio ucp 
+	ON ucp.codass = c.codass AND ucp.sede = c.cod_sede AND ucp.id_campo = c.id
+LEFT JOIN utilizzo_campi_mattino ucm 
+	ON ucm.codass = c.codass AND ucm.sede = c.cod_sede AND ucm.id_campo = c.id
+WHERE c.codass = 'POLRM' AND c.attrezzatura AND t.sport like '_alcio%'
