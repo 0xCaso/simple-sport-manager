@@ -133,16 +133,16 @@ VALUES
 ('POLRM', 'Poli','Tolomeo','M','1995-09-23','PLOTLM95P23F717I','011/651116','tolomeo.poli@gmail.com','ZQ93svkiD41L', 10, '2018-9-19', NULL, 1),
 ('CAME', 'Fanellagia','Raffaele','M','2000-07-20','FNLRFL00L58F216F','346/2536454','rafanellagia@gmail.com','bmwfanelz00', 20, '2019-7-20', NULL, 2),
 
-('TCPG','Carobbio','Baldassarre','M','1985-08-15','CRBBDS85M15E507I','0736/659335','bald.caro@hotmail.com','UL62fzqlR36O',10,' 28/12/2015',' 12/10/2022',1),
-('TCPG','Fugazzi','Arnaldo','M','2000-10-30','FGZRLD00R30H395L','0543/193304','arnaldo.fugazzi@gmail.com','UD65smjwZ09G',20,' 02/08/2012',' 23/08/2017',2),
-('TCPG','Onofrio','Adriana','F','1989-10-19','NFRDRN89R59L535D','049/721393','adriana.onofrio@gmail.com','JX23zfdtI23O',30,' 24/11/2016',' 18/07/2019',1),
-('TCPG','Petrazzuolo','Dante','M','1994-07-06','PTRDNT94L06G428W','0382/1051382','d.petrazzuolo@gmail.com','AI29ycsnN64G',10,' 28/12/2015',' 14/11/2017',2),
-('TCPG','Amedei','Minerva','F','1991-02-26','MDAMRV91B66C187D','0984/286769','minerva.amedei@libero.it','WU47thmgX16C',20,' 29/06/2015',' 22/09/2017',1),
-('TCPG','Quintarelli','Gerardo','M','1998-03-08','QNTGRD98C08F655L','049/971795','g.quintarelli@tele2.it','UK26cmfsN62K',30,' 29/06/2015',' 22/09/2017',2),
+('TCPG','Carobbio','Baldassarre','M','1985-08-15','CRBBDS85M15E507I','0736/659335','bald.caro@hotmail.com','UL62fzqlR36O',10,' 28/12/2015',NULL,1),
+('TCPG','Fugazzi','Arnaldo','M','2000-10-30','FGZRLD00R30H395L','0543/193304','arnaldo.fugazzi@gmail.com','UD65smjwZ09G',20,' 02/08/2012',NULL,2),
+('TCPG','Onofrio','Adriana','F','1989-10-19','NFRDRN89R59L535D','049/721393','adriana.onofrio@gmail.com','JX23zfdtI23O',30,' 24/11/2016',NULL,1),
+('TCPG','Petrazzuolo','Dante','M','1994-07-06','PTRDNT94L06G428W','0382/1051382','d.petrazzuolo@gmail.com','AI29ycsnN64G',10,' 28/12/2015',NULL,2),
+('TCPG','Amedei','Minerva','F','1991-02-26','MDAMRV91B66C187D','0984/286769','minerva.amedei@libero.it','WU47thmgX16C',20,' 29/06/2015',NULL,1),
+('TCPG','Quintarelli','Gerardo','M','1998-03-08','QNTGRD98C08F655L','049/971795','g.quintarelli@tele2.it','UK26cmfsN62K',30,' 29/06/2015',NULL,2),
 ('TCPG','Minozzi','Omero','M','1997-11-22','MNZMRO97S22M119N','0523/214353','omero.minozzi@tiscali.it','EL04hebjP68A',10,' 21/03/2014',' 22/09/2017',1),
-('TCPG','Meloncelli','Margherita','F','1983-08-26','MLNMGH83M66B204D','011/558535','margherita.meloncelli@yahoo.com','QO60mdehP30Z',20,' 07/05/2014',' 24/08/2022',2),
-('TCPG','Arbizzani','Ferdinando','M','2001-07-23','RBZFDN01L23F918O','035/812848','ferdinando.arbizzani@lycos.it','UY60kdlrQ49Q',30,' 07/10/2015',' 28/01/2021',1),
-('TCPG','Tagliafierro','Romolo','M','1991-05-23','TGLRML91E23D578W','035/125471','romolo.tagliafierro@gmail.com','HE87dnjnA83N',10,' 07/02/2013',' 22/09/2017',2);
+('TCPG','Meloncelli','Margherita','F','1983-08-26','MLNMGH83M66B204D','011/558535','margherita.meloncelli@yahoo.com','QO60mdehP30Z',20,' 07/05/2014',NULL,2),
+('TCPG','Arbizzani','Ferdinando','M','2001-07-23','RBZFDN01L23F918O','035/812848','ferdinando.arbizzani@lycos.it','UY60kdlrQ49Q',30,' 07/10/2015',NULL,1),
+('TCPG','Tagliafierro','Romolo','M','1991-05-23','TGLRML91E23D578W','035/125471','romolo.tagliafierro@gmail.com','HE87dnjnA83N',10,' 07/02/2013',NULL,2);
 
 INSERT INTO tipologia_campo (codass, id, sport, terreno, larghezza, lunghezza)
 VALUES
@@ -218,16 +218,6 @@ VALUES
 ('TCPG', 4, 1, 4, true),
 ('TCPG', 1, 2, 1, true),
 ('TCPG', 2, 2, 3, true);
-
-/*
-
-ATTANSION (vincolo di integrità da aggiungere):
-Su stipendi/fatture/esborsi --> id dipendente deve essere di un dipendente del grado giusto
-								(esempio --> fatture gestite esclusivamente da dipendenti con grado associato a "segreteria")
-							--> inoltre la chiave codass-data-id_dipendente deve corrispondere a una tupla su "pagamento"
-								la quale dovrà avere il giusto tipo di operazione
-								
-*/
 
 INSERT INTO prenotazioni (codass, id_campo, sede, id_tesserato, data, ore, arbitro)
 VALUES
@@ -326,9 +316,6 @@ VALUES
 ('POLRM', 4, 1, 'NTNNGR56D55D668J', '15-05-2020 17:30', 2, false),
 ('POLRM', 3, 1, 'PNTRND84D30H108A', '15-05-2020 18:30', 1, false),
 ('POLRM', 4, 1, 'FRRZRA72E42E530Z', '15-05-2020 14:30', 2, false);
-
-
-/* ------------ INIZIO ------------ */
 
 INSERT INTO prenotazioni (codass, id_campo, sede, id_tesserato, data, ore, arbitro)
 VALUES
