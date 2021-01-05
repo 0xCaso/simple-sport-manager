@@ -49,12 +49,18 @@ JOIN campo C ON P.codass = C.codass AND P.id_campo = C.id AND P.sede = C.cod_sed
 JOIN tipologia_campo T ON T.codass = C.codass AND T.id = C.tipologia
 GROUP BY (sport)
 
-/* Tesserati che hanno fatto almeno 2 prenotazioni nel 2020 */
-SELECT T.cf as codice_fiscale, T.cognome, T.nome, count(data), T.codass
-FROM prenotazioni P
-JOIN tesserino T ON P.codass = T.codass AND P.id_tesserino = T.cf
-WHERE extract(YEAR from P.data) = 2020 --AND T.codass = 'POLRM'
-GROUP BY T.cf, T.cognome, T.nome, T.codass
+
+
+
+
+
+
+
+
+
+
+WHERE extract(YEAR from P.data) = 2020 AND T.codass = 'POLRM'
+GROUP BY T.cf, T.cognome, T.nome, T.codass--, ppc.id_campo
 HAVING count(data) > 2
 
 select *
@@ -68,6 +74,12 @@ from tipologia_Campo
 
 select *
 from campo
+
+select sum(importo)
+from pagamento 
+where 
+codass = 'JSDB' AND extract(year from data) = (extract(year from CURRENT_DATE))
+group by codass
 
 /*
 	IDEE:
@@ -126,6 +138,24 @@ from dipendente
 where cf = 'SCCTCR93M24L183J'
 
 SELECT date_part('hour', now())
+
+
+/* Visualizzare i campi disponibili presso una sede in un determinato orario/fascia oraria */
+
+
+
+
+
+concat(to_char(ore, '9.9'),' hour')
+
+startDate TIMESTAMP := endDate - $3 * INTERVAL '1 MONTH';
+
+select concat(to_char(2.5, '9.9'),' hour')
+select 2.5 * INTERVAL '1 hour'
+2.5 || ' hour'
+
+select *
+from campo
 
 
 

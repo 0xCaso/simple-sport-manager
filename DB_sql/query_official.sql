@@ -151,3 +151,30 @@ JOIN tipologia_campo t
 	ON t.codass = a.codice AND t.id = up.tipologia
 WHERE a.codice = 'POLRM'
 ORDER BY a.codice, s.codice, s.nome, up.id, up.da
+
+/* 
+	Tesserati della Polisportiva Romana che hanno fatto almeno 2 prenotazioni nel 2020 e indicare il campo più prenotato 
+	e il relativo numero di prenotazioni fatte su quel campo 
+*/
+DROP VIEW IF EXISTS prenotazioni_tesserato_1campo;
+CREATE VIEW prenotazioni_tesserato_1campo AS
+	SELECT codass, id_tesserato, max(num) as max
+	FROM (
+		SELECT codass, id_tesserato, id_campo, count(*) as num
+		FROM prenotazioni
+		WHERE extract(YEAR from data) = extract(year from CURRENT_DATE)-1
+		GROUP BY codass, id_tesserato, id_campo
+	) as conteggio
+	GROUP BY codass, id_tesserato;
+	
+SELECT p.id_tesserato as "Codice Fiscale", T.cognome, T.nome, s.nome as "Nome della sede", p.id_campo as "Numero Campo Preferito", tc.sport, pmax.max as "N° Prenotazioni"
+FROM prenotazioni p
+JOIN prenotazioni_tesserato_1campo pmax ON pmax.codass = p.codass AND pmax.id_tesserato = p.id_tesserato
+JOIN tesserato T ON p.codass = T.codass AND p.id_tesserato = T.cf
+JOIN campo c ON c.codass = p.codass AND p.id_campo = c.id
+JOIN tipologia_campo tc ON tc.codass = p.codass AND tc.id = c.tipologia
+JOIN sede s ON s.codass = p.codass AND s.codice = p.sede
+WHERE p.codass = 'POLRM' AND extract(YEAR from P.data) = extract(year from CURRENT_DATE)-1
+GROUP BY p.id_tesserato, p.id_campo, pmax.max, T.cognome, T.nome, p.sede, s.nome, tc.sport
+HAVING count(*) = pmax.max AND count(*) > 2
+ORDER BY pmax.max DESC, cognome, nome;
