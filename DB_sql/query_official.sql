@@ -115,3 +115,39 @@ WHERE
 s.codass = 'CAME' AND 
 (extract(year from p.data) = extract(year from CURRENT_DATE)-1 or importo is null)
 GROUP BY s.codice, s.nome, s.codass, attivi, prenotazioni_anno
+
+/* 
+	Mostrare i campi disponibili presso tutte le sedi della Polisportiva Romana (codice POLRM) in data 20/05/2020 
+	filtrato per la fascia oraria dalle 13:30 alle 21:30 e nel caso ci fossero prenotazioni pendenti su quel campo
+	indicare quando è occupato.
+*/ 
+SELECT s.nome as nome_sede, s.via, s.cod_civico, up.id as num_campo, t.sport, t.terreno, 
+	CASE
+		WHEN up.da IS NULL THEN 'DISPONIBILE'
+		ELSE 'OCCUPATO'
+	END as stato,
+	to_char(up.da, 'HH24:MI:SS') as da, to_char(up.a, 'HH24:MI:SS') as a
+FROM sede s
+JOIN associazione a 
+	ON a.codice = s.codass
+JOIN ((SELECT c.codass, c.cod_sede , c.id, c.tipologia, NULL as da, NULL as a
+		FROM campo c
+		LEFT JOIN prenotazioni p ON p.codass = c.codass AND p.id_campo = c.id AND p.sede = c.cod_sede
+		WHERE (c.codass, c.id) NOT IN (
+			SELECT DISTINCT c.codass, id
+			FROM campo c
+			LEFT JOIN prenotazioni p ON p.codass = c.codass AND p.sede = c.cod_sede AND p.id_campo = c.id
+			WHERE data between '2020-5-20 13:30' AND '2020-05-20 21:30'
+		)
+		GROUP BY c.cod_sede , c.id, c.codass, c.tipologia)
+		union
+		(SELECT c.codass, c.cod_sede, c.id, c.tipologia, data as da, data + (ore * INTERVAL '1 hour') as a
+		FROM campo c
+		JOIN prenotazioni p ON p.codass = c.codass AND p.sede = c.cod_sede AND p.id_campo = c.id
+		WHERE data between '2020-5-20 13:30' AND '2020-05-20 21:30'
+		GROUP BY c.codass, c.id, c.cod_sede, c.tipologia, data, ore)) as up
+	ON up.codass = s.codass AND up.cod_sede = s.codice
+JOIN tipologia_campo t
+	ON t.codass = a.codice AND t.id = up.tipologia
+WHERE a.codice = 'POLRM'
+ORDER BY a.codice, s.codice, s.nome, up.id, up.da

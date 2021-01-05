@@ -1,38 +1,22 @@
-ALTER TABLE associazione 		DISABLE TRIGGER ALL;
-ALTER TABLE campo 				DISABLE TRIGGER ALL;
-ALTER TABLE citta				DISABLE TRIGGER ALL;
-ALTER TABLE contratti 			DISABLE TRIGGER ALL;
-ALTER TABLE dipendente			DISABLE TRIGGER ALL;
-ALTER TABLE esborsi				DISABLE TRIGGER ALL;
-ALTER TABLE fatture		 		DISABLE TRIGGER ALL;
-ALTER TABLE fornitore			DISABLE TRIGGER ALL;
-ALTER TABLE grado_dipendenti	DISABLE TRIGGER ALL;
-ALTER TABLE pagamento 			DISABLE TRIGGER ALL;
-ALTER TABLE prenotazioni		DISABLE TRIGGER ALL;
-ALTER TABLE sede				DISABLE TRIGGER ALL;
-ALTER TABLE stipendi 			DISABLE TRIGGER ALL;
-ALTER TABLE tesserino			DISABLE TRIGGER ALL;
-ALTER TABLE tipologia_campo		DISABLE TRIGGER ALL;
+drop table if exists associazione CASCADE;
+drop table if exists campo CASCADE;
+drop table if exists citta CASCADE;
+drop table if exists contratti CASCADE;
+drop table if exists dipendente CASCADE;
+drop table if exists esborsi CASCADE;
+drop table if exists fatture CASCADE;
+drop table if exists fornitore CASCADE;
+drop table if exists grado_dipendenti CASCADE;
+drop table if exists pagamento CASCADE;
+drop table if exists prenotazioni CASCADE;
+drop table if exists sede CASCADE;
+drop table if exists stipendi CASCADE;
+drop table if exists tesserato CASCADE;
+drop table if exists tipologia_campo CASCADE;
 
-/*drop table if exists associazione;
-drop table if exists campo;
-drop table if exists citta;
-drop table if exists contratti;
-drop table if exists dipendente;
-drop table if exists esborsi;
-drop table if exists fatture;
-drop table if exists fornitore;
-drop table if exists grado_dipendenti;
-drop table if exists pagamento;
-drop table if exists prenotazioni;
-drop table if exists sede;
-drop table if exists stipendi;
-drop table if exists tesserino;
-drop table if exists tipologia_campo;*/
-
+DROP TYPE IF EXISTS sessi, operazioni;
 CREATE TYPE sessi 		AS ENUM ('M', 'F');
 CREATE TYPE operazioni 	AS ENUM ('F', 'S', 'E');
-
 
 CREATE TABLE Associazione (
 	codice 		varchar(20),
@@ -43,7 +27,7 @@ CREATE TABLE Associazione (
 	PRIMARY KEY(codice)
 );
 
-CREATE TABLE Tesserino (
+CREATE TABLE Tesserato (
 	codass					varchar(20),
 	cf						char(16),
 	nome					varchar(80) NOT NULL,
@@ -126,7 +110,7 @@ CREATE TABLE prenotazioni (
 	codass			varchar(20),
 	id_campo		int,
 	sede			int,
-	id_tesserino	char(16) NOT NULL,
+	id_tesserato	char(16) NOT NULL,
 	data			timestamp NOT NULL,
 	ore				decimal(2,1) NOT NULL, /* Si possono prenotare solo ore o mezz'ore (mezz'ora = 0.5) */
 	arbitro			bool DEFAULT false,
@@ -154,7 +138,7 @@ CREATE TABLE Dipendente (
 	data_assunzione 	date NOT NULL,
 	data_fine			date, /* if IS NOT NULL => licenziato/pensione */
 	cod_sede			int NOT NULL,
-	PRIMARY KEY (codass, cf), /* codass in chiave altrimenti un dipendente non potrebbe cambiare associazione (es. licenziamento) */
+	PRIMARY KEY (codass, cf),
 	FOREIGN KEY (codass)			REFERENCES Associazione(codice),
 	FOREIGN KEY (codass, cod_sede)	REFERENCES Sede(codass, codice),
 	FOREIGN KEY (grado)				REFERENCES grado_dipendenti(id)
@@ -191,12 +175,12 @@ CREATE TABLE fatture (
 	codass				varchar(20),
 	data				timestamp,
 	id_dipendente		char(16),
-	tesserino			char(16) NOT NULL, /* Arbitro o Atleta */
+	tesserato			char(16) NOT NULL, /* Arbitro o Atleta */
 	descrizione			varchar(255),
-	progressivo			int check(progressivo >= 0),
+	progressivo			int check(progressivo > 0),
 	PRIMARY KEY (codass, data, id_dipendente, progressivo),
 	FOREIGN KEY (codass, data, id_dipendente) REFERENCES Pagamento(codass, data, id_dipendente),
-	FOREIGN KEY (codass, tesserino) REFERENCES Tesserino(codass, cf)
+	FOREIGN KEY (codass, tesserato) REFERENCES Tesserato(codass, cf)
 );
 
 CREATE TABLE esborsi (
@@ -209,19 +193,3 @@ CREATE TABLE esborsi (
 	FOREIGN KEY (codass, data, id_dipendente) REFERENCES Pagamento(codass, data, id_dipendente),
 	FOREIGN KEY (id_fornitore) REFERENCES Fornitore(piva)
 );
-
-ALTER TABLE associazione 		ENABLE TRIGGER ALL;
-ALTER TABLE campo 				ENABLE TRIGGER ALL;
-ALTER TABLE citta				ENABLE TRIGGER ALL;
-ALTER TABLE contratti 			ENABLE TRIGGER ALL;
-ALTER TABLE dipendente			ENABLE TRIGGER ALL;
-ALTER TABLE esborsi				ENABLE TRIGGER ALL;
-ALTER TABLE fatture		 		ENABLE TRIGGER ALL;
-ALTER TABLE fornitore			ENABLE TRIGGER ALL;
-ALTER TABLE grado_dipendenti	ENABLE TRIGGER ALL;
-ALTER TABLE pagamento 			ENABLE TRIGGER ALL;
-ALTER TABLE prenotazioni		ENABLE TRIGGER ALL;
-ALTER TABLE sede				ENABLE TRIGGER ALL;
-ALTER TABLE stipendi 			ENABLE TRIGGER ALL;
-ALTER TABLE tesserino			ENABLE TRIGGER ALL;
-ALTER TABLE tipologia_campo		ENABLE TRIGGER ALL;

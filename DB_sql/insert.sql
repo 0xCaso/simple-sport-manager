@@ -3,10 +3,7 @@ INSERT INTO associazione (codice, ragsoc, sito,	email, password)
 VALUES
 ('POLRM', 'Polisportiva Romana', 'polisportivaromana.it', 'info@polisportivaromana.it', 'polisportiva01'),
 ('JSDB', 'Jesolo San Donà Basket', 'jesolosandonabasket.it', 'info@jsdb.it', 'basket01'),
-('CAME', 'Calciatori Mestrini', 'calciomestre.it', 'info@calciomestre.it', 'calcio01');
-
-INSERT INTO associazione (codice, ragsoc, sito,	email, password)
-VALUES
+('CAME', 'Calciatori Mestrini', 'calciomestre.it', 'info@calciomestre.it', 'calcio01'),
 ('TCPG', 'Tennis Club Portogruaro', 'portogruarotc.it', 'info@pgtc.it', 'tennis01');
 
 /* Popolamento Tesserati */
@@ -42,37 +39,18 @@ VALUES
 ('JSDB','Galiani','Norina','F','1943-03-25','GLNNRN43C65D398Y','0783/410414','norina.galiani@tin.it','GI52fyhnH18W', true, '03/03/1999', '03/03/2005'),
 ('POLRM','Barone','Noemi','F','2012-08-31','BRNNMO12M71E893S','06/833110','noem.baro@aruba.it','MU06xljzJ94G', false, '03/03/2021', '03/03/2022'),
 ('CAME','Lange','Emanuele','M','1980-07-13','LNGMNL80L13C387K','0524/865784','emanuele.lange@yahoo.com','GA28euvzV87I', false, '03/03/2021', '03/03/2023'),
-('POLRM', 'Raimondo', 'Pantelli', 'M','1984-04-30','PNTRND84D30H108A','0824/1009494','raimondo.pantelli@yahoo.com','JN83lxzdV76Z', false, '12/06/2018', '12/06/2020');
+('POLRM', 'Raimondo', 'Pantelli', 'M','1984-04-30','PNTRND84D30H108A','0824/1009494','raimondo.pantelli@yahoo.com','JN83lxzdV76Z', false, '12/06/2018', '12/06/2020'),
 
-insert into tesserato (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,arbitro,data_iscrizione,scadenza_iscrizione)
-values ('TCPG','Sabbatelli','Mirko','M','2000-11-19','SBBMRK17S19F961M','035/539737','mirko.sabbatelli@virgilio.it','UA90vjatO35R',false,' 31/12/2020',' 11/05/2022');
-
-insert into tesserato (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,arbitro,data_iscrizione,scadenza_iscrizione)
-values ('TCPG','Mazzolini','Ulrico','M','1995-01-26','MZZLRC35A26A038K','0372/213476','ulrico.mazzolini@hotmail.com','GK40okdlP09V',true,' 22/10/2019',' 08/07/2022');
-
-insert into tesserato (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,arbitro,data_iscrizione,scadenza_iscrizione)
-values ('TCPG','Vargiu','Daniele','M','1990-08-19','VRGDNL10M19E727A','02/1067185','daniele.vargiu@tele2.it','ZE21ovjuU79O',false,' 29/06/2020',' 08/07/2022');
-
-insert into tesserato (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,arbitro,data_iscrizione,scadenza_iscrizione)
-values ('TCPG','Maragnano','Decimo','M','1982-02-01','MRGDCM12B01H242P','02/793234','deci.mara@yahoo.it','BL18lbfiE35Q',true,' 23/09/2019',' 11/05/2022');
-
-insert into tesserato (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,arbitro,data_iscrizione,scadenza_iscrizione)
-values ('TCPG','Cavioni','Marinella','F','1981-08-23','CVNMNL81M63L817G','035/258064','marinella.cavioni@tele2.it','WQ64hhbeQ06E',false,' 14/08/2020',' 29/08/2023');
-
-insert into tesserato (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,arbitro,data_iscrizione,scadenza_iscrizione)
-values ('TCPG','Guglielmetti','Mosè','M','1996-06-24','GGLMSO96H24A444K','089/948950','mos.guglielmetti@teletu.it','PN40iozpL49Z',false,' 31/12/2020',' 07/12/2022');
-
-insert into tesserato (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,arbitro,data_iscrizione,scadenza_iscrizione)
-values ('TCPG','Fioravanzi','Loris','M','1981-10-12','FRVLRS81R12I482L','0372/1039860','lori.fior@tiscali.it','BN74tlzaR29W',false,' 15/12/2020',' 21/02/2022');
-
-insert into tesserato (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,arbitro,data_iscrizione,scadenza_iscrizione)
-values ('TCPG','Iaconelli','Tamara','F','1971-04-11','CNLTMR61D51L238M','055/753391','tama.iaco@hotmail.com','ZO24zppuM66V',true,'01/01/2019','14/01/2022');
-
-insert into tesserato (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,arbitro,data_iscrizione,scadenza_iscrizione)
-values ('TCPG','Gattinara','Orsola','F','1992-10-03','GTTRSL02R43H939G','085/861691','orsola.gattinara@gmail.com','LJ35bocpF51T',false,' 28/10/2019',' 23/11/2023');
-
-insert into tesserato (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,arbitro,data_iscrizione,scadenza_iscrizione)
-values ('TCPG','Altinier','Pia','F','1996-08-22','LTNPIA36M62H414P','080/644749','pia.altinier@tiscali.it','HU72tpcdE75N',true,' 17/09/2019',' 06/07/2022');
+('TCPG','Sabbatelli','Mirko','M','2000-11-19','SBBMRK17S19F961M','035/539737','mirko.sabbatelli@virgilio.it','UA90vjatO35R',false,' 31/12/2020',' 11/05/2022'),
+('TCPG','Mazzolini','Ulrico','M','1995-01-26','MZZLRC35A26A038K','0372/213476','ulrico.mazzolini@hotmail.com','GK40okdlP09V',true,' 22/10/2019',' 08/07/2022'),
+('TCPG','Vargiu','Daniele','M','1990-08-19','VRGDNL10M19E727A','02/1067185','daniele.vargiu@tele2.it','ZE21ovjuU79O',false,' 29/06/2020',' 08/07/2022'),
+('TCPG','Maragnano','Decimo','M','1982-02-01','MRGDCM12B01H242P','02/793234','deci.mara@yahoo.it','BL18lbfiE35Q',true,' 23/09/2019',' 11/05/2022'),
+('TCPG','Cavioni','Marinella','F','1981-08-23','CVNMNL81M63L817G','035/258064','marinella.cavioni@tele2.it','WQ64hhbeQ06E',false,' 14/08/2020',' 29/08/2023'),
+('TCPG','Guglielmetti','Mosè','M','1996-06-24','GGLMSO96H24A444K','089/948950','mos.guglielmetti@teletu.it','PN40iozpL49Z',false,' 31/12/2020',' 07/12/2022'),
+('TCPG','Fioravanzi','Loris','M','1981-10-12','FRVLRS81R12I482L','0372/1039860','lori.fior@tiscali.it','BN74tlzaR29W',false,' 15/12/2020',' 21/02/2022'),
+('TCPG','Iaconelli','Tamara','F','1971-04-11','CNLTMR61D51L238M','055/753391','tama.iaco@hotmail.com','ZO24zppuM66V',true,'01/01/2019','14/01/2022'),
+('TCPG','Gattinara','Orsola','F','1992-10-03','GTTRSL02R43H939G','085/861691','orsola.gattinara@gmail.com','LJ35bocpF51T',false,' 28/10/2019',' 23/11/2023'),
+('TCPG','Altinier','Pia','F','1996-08-22','LTNPIA36M62H414P','080/644749','pia.altinier@tiscali.it','HU72tpcdE75N',true,' 17/09/2019',' 06/07/2022');
 
 
 /* Popolamento Sedi */
@@ -87,7 +65,8 @@ VALUES
 INSERT INTO sede (codass, codice, via, cod_civico, cod_citta, nome, telefono)
 VALUES
 ('TCPG', 1, 'Via Alberti', 72, '27029', 'Tennis Club Portogruaro', '0564/803071'),
-('TCPG', 2, 'Via Verdi', 43, '27029', 'Tennis Club Portogruaro (Portovecchio)', '0564/378254');
+('TCPG', 2, 'Via Verdi', 43, '27029', 'Tennis Club Portogruaro (Portovecchio)', '0564/378254'),
+('CAME', 3, 'Via Arnaldo Giacomini', 17, '27042', 'Sede Calcio Mestre (Nuova)', '0141/1554736');
 
 /* Popolamento fornitori */
 INSERT INTO fornitore (piva, ragione_soc, email, telefono)
@@ -95,10 +74,7 @@ VALUES
 ('06500120016', 'Molten Italia', 'd.carta@advanced-distribution.com', '0118005901'),
 ('05126523875', 'Wilson Italia', 'info@wilson.com', '3345879854'),
 ('07762523875', 'Adidas', 'd.prod@adidas.com', '3645479884'),
-('04512794513', 'Nike', 'd.prod@nike.com', '0645446914');
-
-INSERT INTO fornitore (piva, ragione_soc, email, telefono)
-VALUES
+('04512794513', 'Nike', 'd.prod@nike.com', '0645446914'),
 ('06456486415', 'Babolat Italia', 'support@babolat.it', '3347541878'),
 ('08794512358', 'ATP', 'info@atp.com', '3985623145');
 
@@ -111,10 +87,7 @@ VALUES
 ('CAME', '04512794513', '5/06/2007'),
 ('POLRM', '05126523875', '25/10/2015'),
 ('POLRM', '06500120016', '5/08/2015'),
-('POLRM', '04512794513', '13/06/2015');
-
-INSERT INTO contratti (codass, cod_fornitore, data_inizio)
-VALUES
+('POLRM', '04512794513', '13/06/2015'),
 ('TCPG', '05126523875', '13/06/2020'),
 ('TCPG', '06456486415', '3/02/2017'),
 ('TCPG', '08794512358', '22/09/2016');
@@ -158,37 +131,18 @@ VALUES
 ('JSDB', 'Grispo','Marta','F','1989-05-13','GRSMRT89E53G048G','0784/341544','marta.grispo@gmail.com','ON95gsugX20Y', 20, '2020-7-17', NULL, 1),
 ('CAME', 'Laviano','Alba','F','1986-07-18','LVNLBA86L58F216F','0372/350332','alba.laviano@gmail.com','GT63rocrF92R', 30, '2019-8-18', NULL, 2),
 ('POLRM', 'Poli','Tolomeo','M','1995-09-23','PLOTLM95P23F717I','011/651116','tolomeo.poli@gmail.com','ZQ93svkiD41L', 10, '2018-9-19', NULL, 1),
-('CAME', 'Fanellagia','Raffaele','M','2000-07-20','FNLRFL00L58F216F','346/2536454','rafanellagia@gmail.com','bmwfanelz00', 20, '2019-7-20', NULL, 2);
+('CAME', 'Fanellagia','Raffaele','M','2000-07-20','FNLRFL00L58F216F','346/2536454','rafanellagia@gmail.com','bmwfanelz00', 20, '2019-7-20', NULL, 2),
 
-insert into dipendente (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,grado,data_assunzione,data_fine,cod_sede)
-values ('TCPG','Carobbio','Baldassarre','M','1985-08-15','CRBBDS85M15E507I','0736/659335','bald.caro@hotmail.com','UL62fzqlR36O',10,' 28/12/2015',' 12/10/2022',1);
-
-insert into dipendente (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,grado,data_assunzione,data_fine,cod_sede)
-values ('TCPG','Fugazzi','Arnaldo','M','2000-10-30','FGZRLD00R30H395L','0543/193304','arnaldo.fugazzi@gmail.com','UD65smjwZ09G',20,' 02/08/2012',' 23/08/2017',2);
-
-insert into dipendente (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,grado,data_assunzione,data_fine,cod_sede)
-values ('TCPG','Onofrio','Adriana','F','1989-10-19','NFRDRN89R59L535D','049/721393','adriana.onofrio@gmail.com','JX23zfdtI23O',30,' 24/11/2016',' 18/07/2019',1);
-
-insert into dipendente (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,grado,data_assunzione,data_fine,cod_sede)
-values ('TCPG','Petrazzuolo','Dante','M','1994-07-06','PTRDNT94L06G428W','0382/1051382','d.petrazzuolo@gmail.com','AI29ycsnN64G',10,' 28/12/2015',' 14/11/2017',2);
-
-insert into dipendente (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,grado,data_assunzione,data_fine,cod_sede)
-values ('TCPG','Amedei','Minerva','F','1991-02-26','MDAMRV91B66C187D','0984/286769','minerva.amedei@libero.it','WU47thmgX16C',20,' 29/06/2015',' 22/09/2017',1);
-
-insert into dipendente (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,grado,data_assunzione,data_fine,cod_sede)
-values ('TCPG','Quintarelli','Gerardo','M','1998-03-08','QNTGRD98C08F655L','049/971795','g.quintarelli@tele2.it','UK26cmfsN62K',30,' 29/06/2015',' 22/09/2017',2);
-
-insert into dipendente (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,grado,data_assunzione,data_fine,cod_sede)
-values ('TCPG','Minozzi','Omero','M','1997-11-22','MNZMRO97S22M119N','0523/214353','omero.minozzi@tiscali.it','EL04hebjP68A',10,' 21/03/2014',' 22/09/2017',1);
-
-insert into dipendente (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,grado,data_assunzione,data_fine,cod_sede)
-values ('TCPG','Meloncelli','Margherita','F','1983-08-26','MLNMGH83M66B204D','011/558535','margherita.meloncelli@yahoo.com','QO60mdehP30Z',20,' 07/05/2014',' 24/08/2022',2);
-
-insert into dipendente (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,grado,data_assunzione,data_fine,cod_sede)
-values ('TCPG','Arbizzani','Ferdinando','M','2001-07-23','RBZFDN01L23F918O','035/812848','ferdinando.arbizzani@lycos.it','UY60kdlrQ49Q',30,' 07/10/2015',' 28/01/2021',1);
-
-insert into dipendente (codass,cognome,nome,sesso,data_nascita,cf,telefono,email,password,grado,data_assunzione,data_fine,cod_sede)
-values ('TCPG','Tagliafierro','Romolo','M','1991-05-23','TGLRML91E23D578W','035/125471','romolo.tagliafierro@gmail.com','HE87dnjnA83N',10,' 07/02/2013',' 22/09/2017',2);
+('TCPG','Carobbio','Baldassarre','M','1985-08-15','CRBBDS85M15E507I','0736/659335','bald.caro@hotmail.com','UL62fzqlR36O',10,' 28/12/2015',' 12/10/2022',1),
+('TCPG','Fugazzi','Arnaldo','M','2000-10-30','FGZRLD00R30H395L','0543/193304','arnaldo.fugazzi@gmail.com','UD65smjwZ09G',20,' 02/08/2012',' 23/08/2017',2),
+('TCPG','Onofrio','Adriana','F','1989-10-19','NFRDRN89R59L535D','049/721393','adriana.onofrio@gmail.com','JX23zfdtI23O',30,' 24/11/2016',' 18/07/2019',1),
+('TCPG','Petrazzuolo','Dante','M','1994-07-06','PTRDNT94L06G428W','0382/1051382','d.petrazzuolo@gmail.com','AI29ycsnN64G',10,' 28/12/2015',' 14/11/2017',2),
+('TCPG','Amedei','Minerva','F','1991-02-26','MDAMRV91B66C187D','0984/286769','minerva.amedei@libero.it','WU47thmgX16C',20,' 29/06/2015',' 22/09/2017',1),
+('TCPG','Quintarelli','Gerardo','M','1998-03-08','QNTGRD98C08F655L','049/971795','g.quintarelli@tele2.it','UK26cmfsN62K',30,' 29/06/2015',' 22/09/2017',2),
+('TCPG','Minozzi','Omero','M','1997-11-22','MNZMRO97S22M119N','0523/214353','omero.minozzi@tiscali.it','EL04hebjP68A',10,' 21/03/2014',' 22/09/2017',1),
+('TCPG','Meloncelli','Margherita','F','1983-08-26','MLNMGH83M66B204D','011/558535','margherita.meloncelli@yahoo.com','QO60mdehP30Z',20,' 07/05/2014',' 24/08/2022',2),
+('TCPG','Arbizzani','Ferdinando','M','2001-07-23','RBZFDN01L23F918O','035/812848','ferdinando.arbizzani@lycos.it','UY60kdlrQ49Q',30,' 07/10/2015',' 28/01/2021',1),
+('TCPG','Tagliafierro','Romolo','M','1991-05-23','TGLRML91E23D578W','035/125471','romolo.tagliafierro@gmail.com','HE87dnjnA83N',10,' 07/02/2013',' 22/09/2017',2);
 
 INSERT INTO tipologia_campo (codass, id, sport, terreno, larghezza, lunghezza)
 VALUES
@@ -203,10 +157,7 @@ VALUES
 ('POLRM', 4, 'Calcio 7', 'erba sintetica', 30, 50),
 ('POLRM', 5, 'Calcio 8', 'erba', 40, 60),
 ('POLRM', 6, 'Basket', 'parquet', 15, 28),
-('POLRM', 7, 'Basket 3', 'gomma', 15, 11);
-
-INSERT INTO tipologia_campo (codass, id, sport, terreno, larghezza, lunghezza)
-VALUES
+('POLRM', 7, 'Basket 3', 'gomma', 15, 11),
 ('TCPG', 1, 'Tennis', 'terra battuta', 11, 24),
 ('TCPG', 2, 'Tennis', 'erba', 11, 24),
 ('TCPG', 3, 'Tennis', 'erba sintetica', 11, 24),
@@ -260,10 +211,7 @@ VALUES
 ('POLRM', 5, 1, 5, true),
 ('POLRM', 6, 1, 6, true),
 ('POLRM', 7, 1, 5, true),
-('POLRM', 8, 1, 6, true);
-
-INSERT INTO campo (codass, id, cod_sede, tipologia, attrezzatura)
-VALUES
+('POLRM', 8, 1, 6, true),
 ('TCPG', 1, 1, 1, true),
 ('TCPG', 2, 1, 2, true),
 ('TCPG', 3, 1, 3, true),
@@ -281,28 +229,6 @@ Su stipendi/fatture/esborsi --> id dipendente deve essere di un dipendente del g
 								
 */
 
-INSERT INTO pagamento (codass, data, id_dipendente, importo, tipo_operazione)
-VALUES
-('JSDB', '12/04/2021', 'BBBLRD94E18F315Z', '-3000,65', 'S');
-
-INSERT INTO pagamento (codass, data, id_dipendente, importo, tipo_operazione)
-VALUES
-('TCPG', '22/02/2021', 'NFRDRN89R59L535D', '-2500,65', 'S'),
-('TCPG', '18/08/2020', 'NFRDRN89R59L535D', '-2750,80', 'S'),
-('TCPG', '29/05/2019', 'QNTGRD98C08F655L', '-2880,05', 'S'),
-('TCPG', '04/01/2020', 'QNTGRD98C08F655L', '-3220,20', 'S');
-
-INSERT INTO stipendi (codass, data, id_dipendente, soggetto)
-VALUES
-('JSDB', '12/04/2021', 'BBBLRD94E18F315Z', 'BRTGNN98P45C524P');
-
-INSERT INTO stipendi (codass, data, id_dipendente, soggetto)
-VALUES
-('TCPG', '22/02/2021', 'NFRDRN89R59L535D', 'QNTGRD98C08F655L'),
-('TCPG', '18/08/2020', 'NFRDRN89R59L535D', 'MDAMRV91B66C187D'),
-('TCPG', '29/05/2019', 'QNTGRD98C08F655L', 'TGLRML91E23D578W'),
-('TCPG', '04/01/2020', 'QNTGRD98C08F655L', 'PTRDNT94L06G428W');
-
 INSERT INTO prenotazioni (codass, id_campo, sede, id_tesserato, data, ore, arbitro)
 VALUES
 
@@ -315,8 +241,8 @@ VALUES
 
 ('POLRM', 1, 1, 'PPPCLS73T25L810W', '20-05-2020 18:00', 2, true),
 ('POLRM', 3, 1, 'TSSGSI73H28G190O', '20-05-2020 16:30', 2, false),
-('POLRM', 4, 1, 'BRNNMO12M71E893S', '20-05-2020 15:30', 1.5, false),
-('POLRM', 4, 1, 'NTNNGR56D55D668J', '20-05-2020 17:30', 2, false),
+('POLRM', 4, 1, 'BRNNMO12M71E893S', '20-05-2020 16:30', 1.5, false),
+('POLRM', 4, 1, 'NTNNGR56D55D668J', '20-05-2020 18:30', 2, false),
 ('POLRM', 3, 1, 'PNTRND84D30H108A', '20-05-2020 18:30', 1, false),
 ('POLRM', 4, 1, 'FRRZRA72E42E530Z', '20-05-2020 14:30', 2, false),
 
@@ -546,7 +472,6 @@ VALUES
 
 INSERT INTO fatture (codass, data, id_dipendente, tesserato, descrizione, progressivo)
 VALUES
-('TCPG', '05/09/2020 10:00:00', 'CRBBDS85M15E507I', 'CVNMNL81M63L817G', 'Pagamento prenotazione', '0'),
 ('TCPG', '22/11/2020 15:30:00', 'PTRDNT94L06G428W', 'CNLTMR61D51L238M', 'Pagamento prenotazione', '1'),
 ('TCPG', '10/01/2021 11:00:00', 'CRBBDS85M15E507I', 'SBBMRK17S19F961M', 'Pagamento prenotazione', '2'),
 ('TCPG', '04/01/2021 17:30:00', 'MNZMRO97S22M119N', 'GTTRSL02R43H939G', 'Pagamento prenotazione', '3'),
@@ -562,8 +487,8 @@ VALUES
 ('TCPG', '05/09/2020 11:00:00', 'PTRDNT94L06G428W', 'CVNMNL81M63L817G', 'Pagamento prenotazione', '13'),
 ('TCPG', '14/12/2020 08:30:00', 'PTRDNT94L06G428W', 'GTTRSL02R43H939G', 'Pagamento prenotazione', '14'),
 ('TCPG', '23/12/2020 16:00:00', 'MNZMRO97S22M119N', 'GGLMSO96H24A444K', 'Pagamento prenotazione', '15'),
+('TCPG', '05/09/2020 10:00:00', 'CRBBDS85M15E507I', 'CVNMNL81M63L817G', 'Pagamento prenotazione', '16'),
 
-('JSDB', '06/01/2020 16:00:00', 'BRTGNN98P45C524P', 'BNNVND05T71H975W', 'Pagamento prenotazione', '0'),
 ('JSDB', '31/01/2020 11:30:00', 'RZZLEA93C44F385V', 'BRSSVV13R59C631F', 'Pagamento prenotazione', '1'),
 ('JSDB', '26/02/2020 16:00:00', 'GBRCLL96E65F726F', 'GCCSRI85E24A067U', 'Pagamento prenotazione', '2'),
 ('JSDB', '03/06/2020 14:30:00', 'NSLSDR89R50L319K', 'GLNNRN43C65D398Y', 'Pagamento prenotazione', '3'),
@@ -579,8 +504,8 @@ VALUES
 ('JSDB', '06/01/2021 12:00:00', 'BRTGNN98P45C524P', 'BRRRSE83E17E630A', 'Pagamento prenotazione', '13'),
 ('JSDB', '19/01/2021 12:30:00', 'GBRCLL96E65F726F', 'TRNPLG00C21B166C', 'Pagamento prenotazione', '14'),
 ('JSDB', '27/01/2021 16:00:00', 'RZZLEA93C44F385V', 'DFSLLE73H43G184K', 'Pagamento prenotazione', '15'),
+('JSDB', '06/01/2020 16:00:00', 'BRTGNN98P45C524P', 'BNNVND05T71H975W', 'Pagamento prenotazione', '16'),
 
-('CAME', '03/01/2020 10:00:00', 'SCCTCR93M24L183J', 'BMNNDN69S42E423C', 'Pagamento prenotazione', '0'),
 ('CAME', '07/01/2020 16:30:00', 'BRCGTN93A23A193B', 'BROSLL87C59A562M', 'Pagamento prenotazione', '1'),
 ('CAME', '15/01/2020 11:00:00', 'SCCTCR93M24L183J', 'LNGMNL80L13C387K', 'Pagamento prenotazione', '2'),
 ('CAME', '19/02/2020 18:30:00', 'BRCGTN93A23A193B', 'LBTLCU56H53C659Q', 'Pagamento prenotazione', '3'),
@@ -596,8 +521,8 @@ VALUES
 ('CAME', '27/11/2020 19:00:00', 'SCCTCR93M24L183J', 'LNGMNL80L13C387K', 'Pagamento prenotazione', '13'),
 ('CAME', '04/01/2021 18:30:00', 'BRCGTN93A23A193B', 'BRNMRO73P22G619O', 'Pagamento prenotazione', '14'),
 ('CAME', '11/01/2021 20:00:00', 'SCCTCR93M24L183J', 'BROSLL87C59A562M', 'Pagamento prenotazione', '15'),
+('CAME', '03/01/2020 10:00:00', 'SCCTCR93M24L183J', 'BMNNDN69S42E423C', 'Pagamento prenotazione', '16'),
 
-('POLRM', '09/01/2020 14:00:00', 'LBRMLN88B52A690A', 'LLLMFR13P28E390F', 'Pagamento prenotazione', '0'),
 ('POLRM', '16/01/2020 11:30:00', 'NDDMDL99T62F762S', 'TSSGSI73H28G190O', 'Pagamento prenotazione', '1'),
 ('POLRM', '29/01/2020 10:00:00', 'PLCFBL97P51F651S', 'NTNNGR56D55D668J', 'Pagamento prenotazione', '2'),
 ('POLRM', '03/02/2020 09:30:00', 'PLOTLM95P23F717I', 'BRNNMO12M71E893S', 'Pagamento prenotazione', '3'),
@@ -612,7 +537,24 @@ VALUES
 ('POLRM', '09/09/2020 14:00:00', 'NDDMDL99T62F762S', 'PNTRND84D30H108A', 'Pagamento prenotazione', '12'),
 ('POLRM', '02/10/2020 15:00:00', 'PLOTLM95P23F717I', 'BRNNMO12M71E893S', 'Pagamento prenotazione', '13'),
 ('POLRM', '19/10/2020 21:30:00', 'LBRMLN88B52A690A', 'LLLMFR13P28E390F', 'Pagamento prenotazione', '14'),
-('POLRM', '04/01/2021 09:00:00', 'NDDMDL99T62F762S', 'NTNNGR56D55D668J', 'Pagamento prenotazione', '15');
+('POLRM', '04/01/2021 09:00:00', 'NDDMDL99T62F762S', 'NTNNGR56D55D668J', 'Pagamento prenotazione', '15'),
+('POLRM', '09/01/2020 14:00:00', 'LBRMLN88B52A690A', 'LLLMFR13P28E390F', 'Pagamento prenotazione', '16');
+
+INSERT INTO pagamento (codass, data, id_dipendente, importo, tipo_operazione)
+VALUES
+('JSDB', '12/04/2021', 'BBBLRD94E18F315Z', '-1000,65', 'S'),
+('TCPG', '22/02/2021', 'NFRDRN89R59L535D', '-1500,65', 'S'),
+('TCPG', '18/08/2020', 'NFRDRN89R59L535D', '-1750,80', 'S'),
+('TCPG', '29/05/2019', 'QNTGRD98C08F655L', '-1880,05', 'S'),
+('TCPG', '04/01/2020', 'QNTGRD98C08F655L', '-1220,20', 'S');
+
+INSERT INTO stipendi (codass, data, id_dipendente, soggetto)
+VALUES
+('JSDB', '12/04/2021', 'BBBLRD94E18F315Z', 'BRTGNN98P45C524P'),
+('TCPG', '22/02/2021', 'NFRDRN89R59L535D', 'QNTGRD98C08F655L'),
+('TCPG', '18/08/2020', 'NFRDRN89R59L535D', 'MDAMRV91B66C187D'),
+('TCPG', '29/05/2019', 'QNTGRD98C08F655L', 'TGLRML91E23D578W'),
+('TCPG', '04/01/2020', 'QNTGRD98C08F655L', 'PTRDNT94L06G428W');
 
 INSERT INTO pagamento (codass, data, id_dipendente, importo, tipo_operazione)
 VALUES
