@@ -1,3 +1,207 @@
+/* ---------------------------- */
+/* --------- BUILD DB --------- */
+/* ---------------------------- */
+
+drop table if exists associazione CASCADE;
+drop table if exists campo CASCADE;
+drop table if exists citta CASCADE;
+drop table if exists contratti CASCADE;
+drop table if exists dipendente CASCADE;
+drop table if exists esborsi CASCADE;
+drop table if exists fatture CASCADE;
+drop table if exists fornitore CASCADE;
+drop table if exists grado_dipendenti CASCADE;
+drop table if exists pagamento CASCADE;
+drop table if exists prenotazioni CASCADE;
+drop table if exists sede CASCADE;
+drop table if exists stipendi CASCADE;
+drop table if exists tesserato CASCADE;
+drop table if exists tipologia_campo CASCADE;
+
+DROP TYPE IF EXISTS sessi, operazioni;
+CREATE TYPE sessi 		AS ENUM ('M', 'F');
+CREATE TYPE operazioni 	AS ENUM ('F', 'S', 'E');
+
+CREATE TABLE Associazione (
+	codice 		varchar(20),
+	ragsoc 		varchar(80) NOT NULL,
+	sito		varchar(150) NOT NULL,
+	email		varchar(80) NOT NULL check (email like '%_@__%.__%'),
+	password 	varchar(50) NOT NULL,
+	PRIMARY KEY(codice)
+);
+
+CREATE TABLE Tesserato (
+	codass					varchar(20),
+	cf						char(16),
+	nome					varchar(80) NOT NULL,
+	cognome					varchar(80) NOT NULL,
+	data_nascita			date NOT NULL,
+	email					varchar(80) NOT NULL check (email like '%_@__%.__%'),
+	password				varchar(50) NOT NULL,
+	telefono				varchar(12), /* con 12 caratteri prendiamo quasi la totalità dei numeri */
+	arbitro					bool DEFAULT false,
+	data_iscrizione			date NOT NULL,
+	scadenza_iscrizione		date NOT NULL,
+	sesso 					sessi NOT NULL,
+	PRIMARY KEY(codass, cf),
+	FOREIGN KEY (codass) REFERENCES Associazione(codice)
+);
+
+CREATE TABLE Citta (
+	istat			char(6),
+	cap				char(5) NOT NULL,
+	nome			varchar(100) NOT NULL,
+	provincia		char(2) NOT NULL,
+	regione			char(3) NOT NULL,
+	PRIMARY KEY (istat)
+);
+
+CREATE TABLE Sede (
+	codass			varchar(20),
+	codice			int,
+	via				varchar(150) NOT NULL,
+	cod_civico 		int NOT NULL,
+	cod_citta		char(6) NOT NULL,
+	nome			varchar(150) NOT NULL,
+	telefono		varchar(12),
+	PRIMARY KEY (codass, codice),
+	FOREIGN KEY (codass) 		REFERENCES Associazione(codice),
+	FOREIGN KEY (cod_citta)		REFERENCES Citta(istat)
+);
+
+CREATE TABLE Fornitore (
+	piva				char(11),
+	ragione_soc			varchar(150) NOT NULL,
+	email				varchar(80) NOT NULL check (email like '%_@__%.__%'),
+	telefono			varchar(12),
+	PRIMARY KEY (piva)
+);
+
+CREATE TABLE contratti (
+	codass				varchar(20),
+	cod_fornitore		char(11),
+	data_inizio			date NOT NULL,
+	data_fine			date, /* NULL fino alla chiusura del contratto => senza un rinnovo */
+	PRIMARY KEY (codass, cod_fornitore),
+	FOREIGN KEY (codass) REFERENCES Associazione(codice),
+	FOREIGN KEY (cod_fornitore) REFERENCES Fornitore(piva)
+);
+
+CREATE TABLE tipologia_campo (
+	codass			varchar(20),
+	id				int,
+	sport			varchar(50), /* NULL = campo generico */
+	terreno			varchar(50) NOT NULL,
+	larghezza		smallint NOT NULL check (larghezza > 0), /* misure espresse in metri */
+	lunghezza		smallint NOT NULL check (lunghezza > 0),
+	PRIMARY KEY (codass, id),
+	FOREIGN KEY (codass)	REFERENCES Associazione(codice)
+);
+
+CREATE TABLE Campo (
+	codass			varchar(20),
+	id				int,
+	cod_sede		int,
+	tipologia		int NOT NULL,
+	attrezzatura	bool DEFAULT false,
+	PRIMARY KEY (codass, id, cod_sede),
+	FOREIGN KEY (codass, cod_sede) REFERENCES Sede(codass, codice),
+	FOREIGN KEY (codass, tipologia)	REFERENCES tipologia_campo(codass, id)
+);
+
+CREATE TABLE prenotazioni (
+	codass			varchar(20),
+	id_campo		int,
+	sede			int,
+	id_tesserato	char(16) NOT NULL,
+	data			timestamp NOT NULL,
+	ore				decimal(2,1) NOT NULL, /* Si possono prenotare solo ore o mezz'ore (mezz'ora = 0.5) */
+	arbitro			bool DEFAULT false,
+	PRIMARY KEY (codass, id_campo, sede, data),
+	FOREIGN KEY (codass, id_campo, sede) REFERENCES Campo(codass, id, cod_sede)
+);
+
+CREATE TABLE grado_dipendenti (
+	id				int,
+	descrizione		varchar(50) NOT NULL,
+	PRIMARY KEY (id)
+);
+
+CREATE TABLE Dipendente (
+	codass				varchar(20),
+	cf					char(16),
+	nome				varchar(80) NOT NULL,
+	cognome				varchar(80) NOT NULL,
+	sesso				sessi NOT NULL,
+	data_nascita		date NOT NULL,
+	email				varchar(80) NOT NULL check (email like '%_@__%.__%'),
+	password			varchar(50) NOT NULL,
+	telefono			varchar(12),
+	grado				int NOT NULL,
+	data_assunzione 	date NOT NULL,
+	data_fine			date, /* if IS NOT NULL => licenziato/pensione */
+	cod_sede			int NOT NULL,
+	PRIMARY KEY (codass, cf),
+	FOREIGN KEY (codass)			REFERENCES Associazione(codice),
+	FOREIGN KEY (codass, cod_sede)	REFERENCES Sede(codass, codice),
+	FOREIGN KEY (grado)				REFERENCES grado_dipendenti(id)
+);
+
+CREATE TABLE Pagamento (
+	codass        		varchar(20),
+	data        		timestamp,
+	id_dipendente    	char(16),
+	importo        		money NOT NULL,
+	tipo_operazione    	operazioni NOT NULL,
+	check (((tipo_operazione='S' or tipo_operazione='E') and importo::numeric < 0) or (tipo_operazione = 'F' and importo::numeric <> 0)),
+	PRIMARY KEY (codass, data, id_dipendente), /* codass in chiave per via del licenziamento */
+	FOREIGN KEY (codass, id_dipendente) REFERENCES Dipendente(codass, cf)
+);
+/*
+	tipo_operazione:
+		F => Fattura
+		S => Stipendio
+		E => Esborso
+*/
+
+CREATE TABLE stipendi (
+	codass				varchar(20),
+	data				timestamp,
+	id_dipendente		char(16),
+	soggetto			char(16),		
+	PRIMARY KEY (codass, data, id_dipendente, soggetto),
+	FOREIGN KEY (codass, data, id_dipendente) REFERENCES Pagamento(codass, data, id_dipendente),
+	FOREIGN KEY (codass, soggetto) REFERENCES Dipendente(codass, cf)
+);
+
+CREATE TABLE fatture (
+	codass				varchar(20),
+	data				timestamp,
+	id_dipendente		char(16),
+	tesserato			char(16) NOT NULL, /* Arbitro o Atleta */
+	descrizione			varchar(255),
+	progressivo			int check(progressivo > 0),
+	PRIMARY KEY (codass, data, id_dipendente, progressivo),
+	FOREIGN KEY (codass, data, id_dipendente) REFERENCES Pagamento(codass, data, id_dipendente),
+	FOREIGN KEY (codass, tesserato) REFERENCES Tesserato(codass, cf)
+);
+
+CREATE TABLE esborsi (
+	codass				varchar(20),
+	data				timestamp,
+	id_dipendente		char(16),
+	id_fornitore		char(16) NOT NULL,
+	descrizione			varchar(255),
+	PRIMARY KEY (codass, data, id_dipendente, id_fornitore),
+	FOREIGN KEY (codass, data, id_dipendente) REFERENCES Pagamento(codass, data, id_dipendente),
+	FOREIGN KEY (id_fornitore) REFERENCES Fornitore(piva)
+);
+
+/* ------------------------------- */
+/* --------- INSERT DATA --------- */
+/* ------------------------------- */
+
 /* Popolamento associazioni */
 INSERT INTO associazione (codice, ragsoc, sito,	email, password)
 VALUES
@@ -133,16 +337,16 @@ VALUES
 ('POLRM', 'Poli','Tolomeo','M','1995-09-23','PLOTLM95P23F717I','011/651116','tolomeo.poli@gmail.com','ZQ93svkiD41L', 10, '2018-9-19', NULL, 1),
 ('CAME', 'Fanellagia','Raffaele','M','2000-07-20','FNLRFL00L58F216F','346/2536454','rafanellagia@gmail.com','bmwfanelz00', 20, '2019-7-20', NULL, 2),
 
-('TCPG','Carobbio','Baldassarre','M','1985-08-15','CRBBDS85M15E507I','0736/659335','bald.caro@hotmail.com','UL62fzqlR36O',10,' 28/12/2015',NULL,1),
-('TCPG','Fugazzi','Arnaldo','M','2000-10-30','FGZRLD00R30H395L','0543/193304','arnaldo.fugazzi@gmail.com','UD65smjwZ09G',20,' 02/08/2012',NULL,2),
-('TCPG','Onofrio','Adriana','F','1989-10-19','NFRDRN89R59L535D','049/721393','adriana.onofrio@gmail.com','JX23zfdtI23O',30,' 24/11/2016',NULL,1),
-('TCPG','Petrazzuolo','Dante','M','1994-07-06','PTRDNT94L06G428W','0382/1051382','d.petrazzuolo@gmail.com','AI29ycsnN64G',10,' 28/12/2015',NULL,2),
-('TCPG','Amedei','Minerva','F','1991-02-26','MDAMRV91B66C187D','0984/286769','minerva.amedei@libero.it','WU47thmgX16C',20,' 29/06/2015',NULL,1),
-('TCPG','Quintarelli','Gerardo','M','1998-03-08','QNTGRD98C08F655L','049/971795','g.quintarelli@tele2.it','UK26cmfsN62K',30,' 29/06/2015',NULL,2),
+('TCPG','Carobbio','Baldassarre','M','1985-08-15','CRBBDS85M15E507I','0736/659335','bald.caro@hotmail.com','UL62fzqlR36O',10,' 28/12/2015',' 12/10/2022',1),
+('TCPG','Fugazzi','Arnaldo','M','2000-10-30','FGZRLD00R30H395L','0543/193304','arnaldo.fugazzi@gmail.com','UD65smjwZ09G',20,' 02/08/2012',' 23/08/2017',2),
+('TCPG','Onofrio','Adriana','F','1989-10-19','NFRDRN89R59L535D','049/721393','adriana.onofrio@gmail.com','JX23zfdtI23O',30,' 24/11/2016',' 18/07/2019',1),
+('TCPG','Petrazzuolo','Dante','M','1994-07-06','PTRDNT94L06G428W','0382/1051382','d.petrazzuolo@gmail.com','AI29ycsnN64G',10,' 28/12/2015',' 14/11/2017',2),
+('TCPG','Amedei','Minerva','F','1991-02-26','MDAMRV91B66C187D','0984/286769','minerva.amedei@libero.it','WU47thmgX16C',20,' 29/06/2015',' 22/09/2017',1),
+('TCPG','Quintarelli','Gerardo','M','1998-03-08','QNTGRD98C08F655L','049/971795','g.quintarelli@tele2.it','UK26cmfsN62K',30,' 29/06/2015',' 22/09/2017',2),
 ('TCPG','Minozzi','Omero','M','1997-11-22','MNZMRO97S22M119N','0523/214353','omero.minozzi@tiscali.it','EL04hebjP68A',10,' 21/03/2014',' 22/09/2017',1),
-('TCPG','Meloncelli','Margherita','F','1983-08-26','MLNMGH83M66B204D','011/558535','margherita.meloncelli@yahoo.com','QO60mdehP30Z',20,' 07/05/2014',NULL,2),
-('TCPG','Arbizzani','Ferdinando','M','2001-07-23','RBZFDN01L23F918O','035/812848','ferdinando.arbizzani@lycos.it','UY60kdlrQ49Q',30,' 07/10/2015',NULL,1),
-('TCPG','Tagliafierro','Romolo','M','1991-05-23','TGLRML91E23D578W','035/125471','romolo.tagliafierro@gmail.com','HE87dnjnA83N',10,' 07/02/2013',NULL,2);
+('TCPG','Meloncelli','Margherita','F','1983-08-26','MLNMGH83M66B204D','011/558535','margherita.meloncelli@yahoo.com','QO60mdehP30Z',20,' 07/05/2014',' 24/08/2022',2),
+('TCPG','Arbizzani','Ferdinando','M','2001-07-23','RBZFDN01L23F918O','035/812848','ferdinando.arbizzani@lycos.it','UY60kdlrQ49Q',30,' 07/10/2015',' 28/01/2021',1),
+('TCPG','Tagliafierro','Romolo','M','1991-05-23','TGLRML91E23D578W','035/125471','romolo.tagliafierro@gmail.com','HE87dnjnA83N',10,' 07/02/2013',' 22/09/2017',2);
 
 INSERT INTO tipologia_campo (codass, id, sport, terreno, larghezza, lunghezza)
 VALUES
@@ -218,6 +422,7 @@ VALUES
 ('TCPG', 4, 1, 4, true),
 ('TCPG', 1, 2, 1, true),
 ('TCPG', 2, 2, 3, true);
+
 
 INSERT INTO prenotazioni (codass, id_campo, sede, id_tesserato, data, ore, arbitro)
 VALUES
@@ -316,6 +521,7 @@ VALUES
 ('POLRM', 4, 1, 'NTNNGR56D55D668J', '15-05-2020 17:30', 2, false),
 ('POLRM', 3, 1, 'PNTRND84D30H108A', '15-05-2020 18:30', 1, false),
 ('POLRM', 4, 1, 'FRRZRA72E42E530Z', '15-05-2020 14:30', 2, false);
+
 
 INSERT INTO prenotazioni (codass, id_campo, sede, id_tesserato, data, ore, arbitro)
 VALUES
@@ -562,3 +768,261 @@ VALUES
 ('CAME', '07/09/2020 18:00:00', 'FNLRFL00L58F216F', '07762523875', 'Palloni da calcio Adidas'),
 ('POLRM', '23/09/2020 20:30:00', 'MSMRTT97R11C661I', '06500120016', 'Palloni da basket Molten'),
 ('POLRM', '07/01/2021 08:00:00', 'BSCRCL88H09G520N', '08794512358', 'Palline da Tennis ATP');
+
+INSERT INTO prenotazioni (codass, id_campo, sede, id_tesserato, data, ore, arbitro)
+VALUES
+('CAME', 2, 1, 'BMNNDN69S42E423C', '03/01/2019 10:00:00', 1, true),
+('CAME', 1, 1, 'BROSLL87C59A562M', '07/01/2019 16:30:00', 1.5, true),
+('CAME', 1, 1, 'LNGMNL80L13C387K', '15/01/2019 11:00:00', 2, false),
+('CAME', 1, 2, 'LBTLCU56H53C659Q', '19/02/2019 18:30:00', 1, false),
+('CAME', 2, 1, 'BRNMRO73P22G619O', '15/05/2019 21:00:00', 1, false),
+('CAME', 1, 1, 'LTTCLL09H20I721H', '14/07/2019 20:00:00', 1.5, true),
+('CAME', 1, 2, 'BMNNDN69S42E423C', '15/07/2019 17:30:00', 1, true),
+('CAME', 2, 1, 'MNCBND12B06A227X', '22/07/2019 09:30:00', 1, true),
+('CAME', 1, 1, 'GBRMCR53R06D703U', '31/08/2019 10:30:00', 1, true),
+('CAME', 1, 1, 'BMNNDN69S42E423C', '03/09/2019 14:00:00', 2, false),
+
+('POLRM', 2, 1, 'LLLMFR13P28E390F', '09/01/2019 14:00:00', 1, true),
+('POLRM', 1, 1, 'TSSGSI73H28G190O', '16/01/2019 11:30:00', 1.5, true),
+('POLRM', 3, 1, 'NTNNGR56D55D668J', '29/01/2019 10:00:00', 2, false),
+('POLRM', 1, 1, 'BRNNMO12M71E893S', '03/02/2019 09:30:00', 1, true),
+('POLRM', 2, 1, 'PPPCLS73T25L810W', '21/02/2019 20:00:00', 1, false),
+('POLRM', 1, 1, 'LLLMFR13P28E390F', '24/02/2019 22:00:00', 1.5, true),
+('POLRM', 4, 1, 'FRRZRA72E42E530Z', '09/04/2019 08:30:00', 1, false),
+('POLRM', 2, 1, 'PNTRND84D30H108A', '11/06/2019 10:30:00', 2, true),
+('POLRM', 1, 1, 'TSSGSI73H28G190O', '03/07/2019 16:30:00', 1.5, false),
+('POLRM', 3, 1, 'PPPCLS73T25L810W', '06/07/2019 10:00:00', 1, true);
+
+INSERT INTO pagamento (codass, data, id_dipendente, importo, tipo_operazione)
+VALUES
+('CAME', '03/01/2019 10:00:00', 'SCCTCR93M24L183J', '20', 'F'),
+('CAME', '07/01/2019 16:30:00', 'BRCGTN93A23A193B', '30', 'F'),
+('CAME', '15/01/2019 11:00:00', 'SCCTCR93M24L183J', '25', 'F'),
+('CAME', '19/02/2019 18:30:00', 'BRCGTN93A23A193B', '35', 'F'),
+('CAME', '15/05/2019 21:00:00', 'SCCTCR93M24L183J', '50', 'F'),
+('CAME', '14/07/2019 20:00:00', 'SCCTCR93M24L183J', '40', 'F'),
+('CAME', '15/07/2019 17:30:00', 'SCCTCR93M24L183J', '45', 'F'),
+('CAME', '22/07/2019 09:30:00', 'BRCGTN93A23A193B', '25', 'F'),
+('CAME', '31/08/2019 10:30:00', 'BRCGTN93A23A193B', '30', 'F'),
+('CAME', '03/09/2019 14:00:00', 'BRCGTN93A23A193B', '35', 'F'),
+
+('POLRM', '09/01/2019 14:00:00', 'LBRMLN88B52A690A', '65', 'F'),
+('POLRM', '16/01/2019 11:30:00', 'NDDMDL99T62F762S', '40', 'F'),
+('POLRM', '29/01/2019 10:00:00', 'PLCFBL97P51F651S', '50', 'F'),
+('POLRM', '03/02/2019 09:30:00', 'PLOTLM95P23F717I', '45', 'F'),
+('POLRM', '21/02/2019 20:00:00', 'NDDMDL99T62F762S', '25', 'F'),
+('POLRM', '24/02/2019 22:00:00', 'PLCFBL97P51F651S', '25', 'F'),
+('POLRM', '09/04/2019 08:30:00', 'PLOTLM95P23F717I', '50', 'F'),
+('POLRM', '11/06/2019 10:30:00', 'LBRMLN88B52A690A', '55', 'F'),
+('POLRM', '03/07/2019 16:30:00', 'NDDMDL99T62F762S', '35', 'F'),
+('POLRM', '06/07/2019 10:00:00', 'LBRMLN88B52A690A', '50', 'F');
+
+INSERT INTO fatture (codass, data, id_dipendente, tesserato, descrizione, progressivo)
+VALUES
+('CAME', '03/01/2020 10:00:00', 'SCCTCR93M24L183J', 'BMNNDN69S42E423C', 'Pagamento prenotazione', '1'),
+('CAME', '07/01/2019 16:30:00', 'BRCGTN93A23A193B', 'BROSLL87C59A562M', 'Pagamento prenotazione', '2'),
+('CAME', '15/01/2019 11:00:00', 'SCCTCR93M24L183J', 'LNGMNL80L13C387K', 'Pagamento prenotazione', '3'),
+('CAME', '19/02/2019 18:30:00', 'BRCGTN93A23A193B', 'LBTLCU56H53C659Q', 'Pagamento prenotazione', '4'),
+('CAME', '15/05/2019 21:00:00', 'SCCTCR93M24L183J', 'BRNMRO73P22G619O', 'Pagamento prenotazione', '5'),
+('CAME', '14/07/2019 20:00:00', 'SCCTCR93M24L183J', 'LTTCLL09H20I721H', 'Pagamento prenotazione', '6'),
+('CAME', '15/07/2019 17:30:00', 'SCCTCR93M24L183J', 'BMNNDN69S42E423C', 'Pagamento prenotazione', '7'),
+('CAME', '22/07/2019 09:30:00', 'BRCGTN93A23A193B', 'MNCBND12B06A227X', 'Pagamento prenotazione', '8'),
+('CAME', '31/08/2019 10:30:00', 'BRCGTN93A23A193B', 'GBRMCR53R06D703U', 'Pagamento prenotazione', '9'),
+('CAME', '03/09/2019 14:00:00', 'BRCGTN93A23A193B', 'BMNNDN69S42E423C', 'Pagamento prenotazione', '10'),
+
+('POLRM', '09/01/2020 14:00:00', 'LBRMLN88B52A690A', 'LLLMFR13P28E390F', 'Pagamento prenotazione', '1'),
+('POLRM', '16/01/2019 11:30:00', 'NDDMDL99T62F762S', 'TSSGSI73H28G190O', 'Pagamento prenotazione', '2'),
+('POLRM', '29/01/2019 10:00:00', 'PLCFBL97P51F651S', 'NTNNGR56D55D668J', 'Pagamento prenotazione', '3'),
+('POLRM', '03/02/2019 09:30:00', 'PLOTLM95P23F717I', 'BRNNMO12M71E893S', 'Pagamento prenotazione', '4'),
+('POLRM', '21/02/2019 20:00:00', 'NDDMDL99T62F762S', 'PPPCLS73T25L810W', 'Pagamento prenotazione', '5'),
+('POLRM', '24/02/2019 22:00:00', 'PLCFBL97P51F651S', 'LLLMFR13P28E390F', 'Pagamento prenotazione', '6'),
+('POLRM', '09/04/2019 08:30:00', 'PLOTLM95P23F717I', 'FRRZRA72E42E530Z', 'Pagamento prenotazione', '7'),
+('POLRM', '11/06/2019 10:30:00', 'LBRMLN88B52A690A', 'PNTRND84D30H108A', 'Pagamento prenotazione', '8'),
+('POLRM', '03/07/2019 16:30:00', 'NDDMDL99T62F762S', 'TSSGSI73H28G190O', 'Pagamento prenotazione', '9'),
+('POLRM', '06/07/2019 10:00:00', 'LBRMLN88B52A690A', 'PPPCLS73T25L810W', 'Pagamento prenotazione', '10');
+
+/* --------------------------- */
+/* --------- QUERIES --------- */
+/* --------------------------- */
+
+/* Query estratto conto annuale con differenza rispetto all'anno precedente di TUTTE le associazioni */
+DROP VIEW IF EXISTS saldo_annuale;
+CREATE VIEW saldo_annuale AS
+	SELECT codass, sum(importo) as saldo
+	FROM pagamento P
+	WHERE extract(year from P.data) = (extract(year from CURRENT_DATE)-1)
+	GROUP BY codass;
+
+DROP VIEW IF EXISTS saldo_anno_prec;
+CREATE VIEW saldo_anno_prec AS
+	SELECT codass, sum(importo) as saldo
+	FROM pagamento P
+	WHERE extract(year from P.data) = (extract(year from CURRENT_DATE)-2)
+	GROUP BY codass;
+
+SELECT A.codice, A.ragsoc, SA.saldo as "Saldo Anno Corrente", SP.saldo as "Saldo Anno Precedente",
+CASE
+    WHEN SA.saldo > SP.saldo THEN 'POSITIVO'
+	WHEN SA.saldo = SP.saldo THEN 'PARI'
+	WHEN SA.saldo IS NULL OR SP.saldo IS NULL THEN 'non disponibile'
+    ELSE 'NEGATIVO'
+END AS Stato,
+CASE
+	WHEN SA.saldo > SP.saldo AND SP.saldo > 0::money THEN CONCAT('+',ROUND((((SA.saldo-SP.saldo)/SP.saldo)*100)::numeric, 2))
+	WHEN SA.saldo > SP.saldo AND SP.saldo < 0::money THEN CONCAT('+',ROUND((((SA.saldo-SP.saldo)/SP.saldo)*100)::numeric, 2)*-1)
+	WHEN SP.saldo > SA.saldo AND SA.saldo > 0::money THEN CONCAT('',ROUND((((SA.saldo-SP.saldo)/SP.saldo)*100)::numeric, 2))
+	WHEN SA.saldo IS NULL OR SP.saldo IS NULL THEN 'non calcolabile'
+	ELSE CONCAT('-',ROUND((((SA.saldo-SP.saldo)/SP.saldo)*100)::numeric, 2))
+END AS Percentuale
+FROM associazione A 
+LEFT JOIN saldo_annuale as SA ON SA.codass = A.codice
+LEFT JOIN saldo_anno_prec as SP ON SP.codass = A.codice
+GROUP BY A.codice, A.ragsoc, SA.saldo, SP.saldo
+
+/* 
+	Indicare per ogni associazione, le sedi che hanno registrato il maggior numero di prenotazioni lo scorso anno e
+	indicare la media delle prenotazioni mensili
+	
+	Spiegazione:
+	Utile ad esempio per avere una statistica delle prenotazioni medie mensili registrate sulla base di dati da tutte le
+	associazioni.
+	Es. pensa a server con inserimenti mensili o annuali
+*/
+DROP VIEW IF EXISTS prenotazioni_per_sede;
+CREATE VIEW prenotazioni_per_sede AS
+	SELECT P.codass, P.sede as cod_sede, count(P.sede) as num, ROUND(count(P.sede)/12.0,2) as prenotazioni_mensili
+	FROM prenotazioni P
+	JOIN Sede S ON P.sede = S.codice AND P.codass = S.codass
+	JOIN Associazione A ON A.codice = S.codass
+	JOIN Citta C 		ON C.istat = S.cod_citta
+	WHERE extract(year from P.data) = (extract(year from CURRENT_DATE)-1)
+	GROUP BY P.codass, P.sede;
+
+SELECT A.ragsoc as associazione, S.nome as nome_sede, C.nome as citta, S.via, M.max as prenotazioni_totali, prenotazioni_mensili
+FROM prenotazioni_per_sede P
+JOIN (SELECT codass, max(num) as max
+		FROM prenotazioni_per_sede
+		group by codass) M 		ON P.codass = M.codass AND num = max
+JOIN Associazione A				ON A.codice = P.codass
+JOIN Sede S 					ON S.codass = P.codass AND S.codice = cod_sede
+JOIN Citta C 					ON C.istat = S.cod_citta;
+
+
+/*
+	La Polisportiva Romana (codice POLRM) vuole organizzare un evento calcistico per i suoi tesserati. Deve decidere in quale sede, quale campo e
+	quale fascia oraria siano i più adatti per organizzare l'evento. Nella query si indica il nome della sede, il numero del campo, il relativo
+	terreno e il numero di prenotazioni totali in cui compare nelle due fasce orarie mattino (dalle 8 alle 12) e pomeriggio (dalle 13 alle 21).
+*/
+DROP VIEW IF EXISTS utilizzo_campi_pomeriggio;
+CREATE VIEW utilizzo_campi_pomeriggio AS
+	SELECT p.codass, p.sede, p.id_campo, count(*) as tot_p_pomeriggio
+	FROM prenotazioni p
+	JOIN campo c ON c.codass = p.codass AND c.id = p.id_campo
+	WHERE date_part('hour', p.data) between 13 AND 21
+	GROUP BY p.codass, p.id_campo, p.sede
+	ORDER BY p.codass, p.sede;
+
+DROP VIEW IF EXISTS utilizzo_campi_mattino;
+CREATE VIEW utilizzo_campi_mattino AS
+	SELECT p.codass, p.sede, p.id_campo, count(*) as tot_p_mattino
+	FROM prenotazioni p
+	JOIN campo c ON c.codass = p.codass AND c.id = p.id_campo
+	WHERE date_part('hour', p.data) between 8 AND 12
+	GROUP BY p.codass, p.id_campo, p.sede
+	ORDER BY p.codass, p.sede;
+
+SELECT s.nome as nome_sede, c.id as num_campo, t.sport, t.terreno, tot_p_mattino, tot_p_pomeriggio
+FROM campo c
+LEFT JOIN tipologia_campo t 
+	ON t.codass = c.codass AND t.id = c.tipologia
+LEFT JOIN sede s 
+	ON s.codass = c.codass AND s.codice = c.cod_sede
+LEFT JOIN utilizzo_campi_pomeriggio ucp 
+	ON ucp.codass = c.codass AND ucp.sede = c.cod_sede AND ucp.id_campo = c.id
+LEFT JOIN utilizzo_campi_mattino ucm 
+	ON ucm.codass = c.codass AND ucm.sede = c.cod_sede AND ucm.id_campo = c.id
+WHERE c.codass = 'POLRM' AND c.attrezzatura AND t.sport like '_alcio%' 
+AND (tot_p_mattino IS NOT NULL OR tot_p_pomeriggio IS NOT NULL)
+
+
+/* Saldo sedi associazione Calciatori Mestrini (codice CAME), dipendenti attualmente attivi e totale prenotazioni relative a quella sede nell'anno precendente */
+SELECT s.nome as nome_sede, sum(importo) as saldo, attivi as dipendenti_attivi, prenotazioni_anno
+FROM sede s
+LEFT JOIN dipendente d ON d.codass = s.codass AND d.cod_sede = s.codice
+LEFT JOIN pagamento p ON p.codass = s.codass AND p.id_dipendente = d.cf
+LEFT JOIN (SELECT codass, cod_sede, count(*) as attivi
+			FROM dipendente d
+			WHERE data_fine IS NULL
+			GROUP BY codass, cod_sede
+			ORDER BY codass, cod_sede) as ta ON ta.codass = s.codass AND ta.cod_sede = s.codice
+LEFT JOIN (SELECT codass, sede, count(*) as prenotazioni_anno
+			FROM prenotazioni
+			WHERE extract(year from data) = extract(year from CURRENT_DATE)-1
+			GROUP BY codass, sede) as pr ON pr.codass = s.codass AND pr.sede = s.codice
+WHERE 
+s.codass = 'CAME' AND 
+(extract(year from p.data) = extract(year from CURRENT_DATE)-1 or importo is null)
+GROUP BY s.codice, s.nome, s.codass, attivi, prenotazioni_anno
+
+/* 
+	Mostrare i campi disponibili presso tutte le sedi della Polisportiva Romana (codice POLRM) in data 20/05/2020 
+	filtrato per la fascia oraria dalle 13:30 alle 21:30 e nel caso ci fossero prenotazioni pendenti su quel campo
+	indicare quando è occupato.
+*/ 
+SELECT s.nome as nome_sede, s.via, s.cod_civico, up.id as num_campo, t.sport, t.terreno, 
+	CASE
+		WHEN up.da IS NULL THEN 'DISPONIBILE'
+		ELSE 'OCCUPATO'
+	END as stato,
+	to_char(up.da, 'HH24:MI:SS') as da, to_char(up.a, 'HH24:MI:SS') as a
+FROM sede s
+JOIN associazione a 
+	ON a.codice = s.codass
+JOIN ((SELECT c.codass, c.cod_sede , c.id, c.tipologia, NULL as da, NULL as a
+		FROM campo c
+		LEFT JOIN prenotazioni p ON p.codass = c.codass AND p.id_campo = c.id AND p.sede = c.cod_sede
+		WHERE (c.codass, c.id) NOT IN (
+			SELECT DISTINCT c.codass, id
+			FROM campo c
+			LEFT JOIN prenotazioni p ON p.codass = c.codass AND p.sede = c.cod_sede AND p.id_campo = c.id
+			WHERE data between '2020-5-20 13:30' AND '2020-05-20 21:30'
+		)
+		GROUP BY c.cod_sede , c.id, c.codass, c.tipologia)
+		union
+		(SELECT c.codass, c.cod_sede, c.id, c.tipologia, data as da, data + (ore * INTERVAL '1 hour') as a
+		FROM campo c
+		JOIN prenotazioni p ON p.codass = c.codass AND p.sede = c.cod_sede AND p.id_campo = c.id
+		WHERE data between '2020-5-20 13:30' AND '2020-05-20 21:30'
+		GROUP BY c.codass, c.id, c.cod_sede, c.tipologia, data, ore)) as up
+	ON up.codass = s.codass AND up.cod_sede = s.codice
+JOIN tipologia_campo t
+	ON t.codass = a.codice AND t.id = up.tipologia
+WHERE a.codice = 'POLRM'
+ORDER BY a.codice, s.codice, s.nome, up.id, up.da
+
+/* 
+	Tesserati della Polisportiva Romana che hanno fatto almeno 2 prenotazioni nel 2020 e indicare il campo più prenotato 
+	e il relativo numero di prenotazioni fatte su quel campo 
+*/
+DROP VIEW IF EXISTS prenotazioni_tesserato_1campo;
+CREATE VIEW prenotazioni_tesserato_1campo AS
+	SELECT codass, id_tesserato, max(num) as max
+	FROM (
+		SELECT codass, id_tesserato, id_campo, count(*) as num
+		FROM prenotazioni
+		WHERE extract(YEAR from data) = extract(year from CURRENT_DATE)-1
+		GROUP BY codass, id_tesserato, id_campo
+	) as conteggio
+	GROUP BY codass, id_tesserato;
+	
+SELECT p.id_tesserato as "Codice Fiscale", T.cognome, T.nome, s.nome as "Nome della sede", p.id_campo as "Numero Campo Preferito", tc.sport, pmax.max as "N° Prenotazioni"
+FROM prenotazioni p
+JOIN prenotazioni_tesserato_1campo pmax ON pmax.codass = p.codass AND pmax.id_tesserato = p.id_tesserato
+JOIN tesserato T ON p.codass = T.codass AND p.id_tesserato = T.cf
+JOIN campo c ON c.codass = p.codass AND p.id_campo = c.id
+JOIN tipologia_campo tc ON tc.codass = p.codass AND tc.id = c.tipologia
+JOIN sede s ON s.codass = p.codass AND s.codice = p.sede
+WHERE p.codass = 'POLRM' AND extract(YEAR from P.data) = extract(year from CURRENT_DATE)-1
+GROUP BY p.id_tesserato, p.id_campo, pmax.max, T.cognome, T.nome, p.sede, s.nome, tc.sport
+HAVING count(*) = pmax.max AND count(*) > 2
+ORDER BY pmax.max DESC, cognome, nome;
