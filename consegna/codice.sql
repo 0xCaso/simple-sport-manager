@@ -1025,3 +1025,14 @@ WHERE p.codass = 'POLRM' AND extract(YEAR from P.data) = extract(year from CURRE
 GROUP BY p.id_tesserato, p.id_campo, pmax.max, T.cognome, T.nome, p.sede, s.nome, tc.sport
 HAVING count(*) = pmax.max AND count(*) > 2
 ORDER BY pmax.max DESC, cognome, nome;
+
+
+/* --------------------------- */
+/* --------- INDEXES --------- */
+/* --------------------------- */
+
+DROP INDEX IF EXISTS idx_istat_citta;
+CREATE INDEX idx_istat_citta ON citta ( istat );
+
+DROP INDEX IF EXISTS idx_dipendenti;
+CREATE INDEX idx_dipendenti ON dipendente ( codass , cf );
