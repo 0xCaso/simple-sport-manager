@@ -28,6 +28,7 @@ string query_1() {
         "CASE "
         "    WHEN SA.saldo > SP.saldo AND SP.saldo > 0::money THEN CONCAT('+',ROUND((((SA.saldo-SP.saldo)/SP.saldo)*100)::numeric, 2)) "
         "    WHEN SA.saldo > SP.saldo AND SP.saldo < 0::money THEN CONCAT('+',ROUND((((SA.saldo-SP.saldo)/SP.saldo)*100)::numeric, 2)*-1) "
+        "    WHEN SP.saldo > SA.saldo AND SA.saldo > 0::money THEN CONCAT('',ROUND((((SA.saldo-SP.saldo)/SP.saldo)*100)::numeric, 2)) "
         "    WHEN SA.saldo IS NULL OR SP.saldo IS NULL THEN 'non calcolabile' "
         "    ELSE CONCAT('-',ROUND((((SA.saldo-SP.saldo)/SP.saldo)*100)::numeric, 2)) "
         "END AS Percentuale "
